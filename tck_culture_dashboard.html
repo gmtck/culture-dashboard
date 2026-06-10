@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCK Culture Pulse — Leadership Survey Dashboard</title>
+<title>TCK Culture Dashboard — Leadership Survey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -376,7 +376,7 @@ body {
   <div class="topbar-brand" onclick="_toggleSurveyPicker(event)">
     <div class="topbar-dot"></div>
     <div class="survey-picker-wrap">
-      <div class="topbar-title" id="topbarTitle">TCK Culture Pulse<span class="picker-arrow">▾</span></div>
+      <div class="topbar-title" id="topbarTitle">TCK Culture Dashboard<span class="picker-arrow">▾</span></div>
       <div class="topbar-sub">Leadership Survey Intelligence</div>
       <div class="survey-picker" id="surveyPicker"></div>
     </div>
@@ -391,7 +391,6 @@ body {
     <button onclick="_toggleSurveysDropdown(event)" id="surveysNavBtn">My Surveys ▾</button>
     <div class="surveys-dropdown" id="surveysDropdown"></div>
   </div>
-  <div class="wave-badge">Wave 1 — Jun 2026</div>
 </div>
 
 <div class="wrapper">
@@ -404,7 +403,7 @@ body {
   <div class="sec-header" style="margin-top:1rem;">
     <div class="sec-title">Overview</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Wave 1 · June 3–9, 2026</div>
+    <div class="sec-tag">June 3–9, 2026</div>
   </div>
 
   <!-- SURVEY META BAR -->
@@ -479,7 +478,7 @@ body {
   <div class="sec-header" style="margin-top:2rem;">
     <div class="sec-title">Leadership Action Plan</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Based on Wave 1 findings · June 2026</div>
+    <div class="sec-tag">Based on survey findings · June 2026</div>
   </div>
   <div style="margin-bottom:2rem;">
     <div class="action-item">
@@ -1157,7 +1156,7 @@ body {
 </div><!-- /wrapper -->
 
 <div class="footer">
-  TCK Culture Pulse Dashboard &nbsp;·&nbsp; Wave 1 Baseline &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Confidential — For Senior Leadership Only
+  TCK Culture Dashboard &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Confidential — For Senior Leadership Only
 </div>
 
 <script>
@@ -1756,8 +1755,8 @@ function _populateSurveyPicker() {
     <div class="survey-picker-item ${tckActive ? 'picker-active' : ''}" onclick="_pickSurvey('overview')">
       <div class="picker-dot" style="background:#7c6aff;"></div>
       <div>
-        <div class="picker-name">TCK Culture Pulse</div>
-        <div class="picker-meta">Wave 1 &nbsp;·&nbsp; Jun 2026 &nbsp;·&nbsp; 34 respondents</div>
+        <div class="picker-name">TCK Culture Dashboard</div>
+        <div class="picker-meta">Jun 2026 &nbsp;·&nbsp; 34 respondents</div>
       </div>
     </div>`;
 
@@ -2039,7 +2038,7 @@ function showPage(id) {
   });
   const titleEl = document.getElementById('topbarTitle');
   if (titleEl) {
-    let label = 'TCK Culture Pulse';
+    let label = 'TCK Culture Dashboard';
     if (!_isTCK) {
       const _all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
       const _sv = _all.find(s => 'sv-' + s.id === id);

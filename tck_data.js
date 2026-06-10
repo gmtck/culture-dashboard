@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// TCK Culture Pulse — Survey Data
-// Wave 1 · Jun 2026 · 34 respondents
+// TCK Culture Dashboard — Survey Data
+// Jun 2026 · 34 respondents
 // Update this file for each new wave; the dashboard HTML reads from here.
 // ─────────────────────────────────────────────────────────────────────────────
 
