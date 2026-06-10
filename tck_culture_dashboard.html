@@ -2640,11 +2640,19 @@ const _LV_TIPS = {
       + expandBtn;
     const r = el.getBoundingClientRect();
     const w = 400;
-    let left = r.right + 14;
-    if (left + w > window.innerWidth - 12) left = r.left - w - 14;
+    const isPart2 = !!el.closest('#page-part2');
+    let left;
+    if (isPart2) {
+      // Part 2: anchor slightly right of viewport center (bars are left-heavy)
+      left = (window.innerWidth - w) / 2 + 72;
+    } else {
+      left = r.right + 14;
+      if (left + w > window.innerWidth - 12) left = r.left - w - 14;
+    }
+    left = Math.max(12, Math.min(left, window.innerWidth - w - 12));
     let top = r.top - 8;
     if (top + 650 > window.innerHeight) top = Math.max(8, window.innerHeight - 660);
-    tt.style.left = Math.max(8, left) + 'px';
+    tt.style.left = left + 'px';
     tt.style.top = Math.max(8, top) + 'px';
     tt.style.display = 'block';
     requestAnimationFrame(() => { tt.style.opacity = '1'; });
