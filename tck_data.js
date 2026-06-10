@@ -37,7 +37,7 @@ const surveyQ1 = [
   "Execution mindset",
   "Be accountable for what GMTCK has to achieve and contribute to collectively",
   "Everybody",
-  "여러가지 다양한 것들에 참여 가능",
+  "Able to participate in many different things",
   "Relentless focus on improving performance and workplace culture",
   "Openness to change"
 ];
@@ -75,7 +75,7 @@ const surveyQ2 = [
   "The speed of change is not consistent",
   "Lack of respecting individuals so that they can do best",
   "Need to focus in core activity",
-  "업무외 시간을 너무 많이 빼앗김. 그렇다고 업무를 덜어주는 것도 아니고 업무는 그대로 + Side job 만 계속 늘어남.",
+  "Too much of my time outside of work is taken away. Yet my regular workload is not reduced — the work stays the same while side tasks keep increasing.",
   "Leadership-driven, top-down communication style with a reliance on 'Brian said' direction",
   "Disconnect between levels"
 ];
@@ -113,7 +113,7 @@ const surveyQ3 = [
   "Broader shared belief in AiO and future capability building",
   "The power of Collective intelligence gets overlooked from time to time",
   "Good",
-  "너무 모든 것을 리더가 또는 우리가 직접 해야 한다는 논리.",
+  "The logic that leaders or we ourselves must do everything.",
   "Bridge connecting leadership with employees at all levels",
   "Time to absorb change"
 ];
@@ -207,7 +207,7 @@ const surveyPart2 = [
   "[Subject 1] 1. We will be able to learn faster with shorter development cycles and move from reactive to predictive problem solving. We will also be able to go beyond a function-based organization and become a team that proposes integrated, technology-enabled solutions with stronger global competitiveness. 2. The story I would be most proud of is that I helped open people's potential beyond the boundaries of their current roles — a culture where people were not afraid of new technology, where they kept learning, growing, and ultimately creating greater value than they thought possible. [Subject 2] 1. My biggest regret would be any moment when I accepted the comfort of familiar ways simply because they were still working. 2. I would tell my younger self that people have more potential than we often realize, and that leadership is about creating the conditions for that potential to grow — listen more, encourage earlier action, and create an environment where people can try, fail, learn, and try again with confidence.",
   "Subject 1: Q1. More efficiency and flexibility at allocating complicated jobs to AIO engineers. Q2. Even if many others are fearful or concerned about our effort on AIO, GMTCK can do a pilot test and make it successful. As a result, more workload can be done by less headcounts. Subject 2: Q1. Just followed blindly the BP, guidelines, tips without having the question 'what if?' Q2. Can I/we make a different way or approach with another technology or learning?",
   "We need to learn how China is doing now better than other countries.",
-  "Subject 1. 방향은 맞고 좋다고 봄. 하지만 지금 하고 있는 것들이 맞지 않을 경우 방법을 수정해야함. 만약에 지금 추진하고 있는 것들이 모두 성공한다면 긍정적 결과가 기대됨. 하지만 겉으로 드러나는 것만 보지 말고 그 내면을 봐야함. 직원들의 진짜 속마음을 들여다 봐야 합니다. Subject 2. AI 가 10년후에 어디까지 할수 있을지 상상이 안됨. 얼마 안가서 UG 를 직접 다룰 필요도 없어질 것이라 생각함. 몇가지 section 과 재질 두께 등의 조건만 주면 AI 가 UG math 를 그려줄 날이 머지 않아 올것으로 생각함. 그런데 지금 우리가 하고 있는 여러 일들이 그에 부합하는가? 하는 질문에 답은 '노' 라고 하고 싶음. '연구개발' 하는 회사는 '연구개발' 에 집중 해야함. 세계 최고의 회사들 NVIDIA/APPLE 은 어떻게 하고 있을까?",
+  "Subject 1. I think the direction is right and good. But if what we are doing now is not right, we need to change the approach. If everything we are pushing now succeeds, positive results are expected. But we should not look only at what appears on the surface — we need to look inside. We need to understand employees' true feelings. Subject 2. I cannot imagine how far AI will be able to go in 10 years. I think we will soon no longer need to handle UG directly. I believe the day is not far off when AI will draw UG math if we only provide conditions such as sections and material thickness. But I want to answer 'no' to the question of whether the many things we are doing now align with that. An R&D company should focus on R&D. What are world-class companies like NVIDIA and Apple doing?",
   "S1: I'd be most proud to say we moved from role-based work to a growth mindset, empowering people to continuously expand their skills and confidence. S2: My biggest regret would be not challenging the top-down culture and traditional ways of working earlier and more assertively. Hierarchy, risk aversion, and over-prioritizing alignment held me back; a more open, trust-based culture that truly encourages speaking up would have removed that barrier.",
   "Subject 1: In today's fast-changing automotive industry, where new technologies are coming out all the time, I believe this effort can help TCK become more flexible and better prepared to respond to change and new challenges. I hope I can say that I kept an open mindset and tried new things, instead of staying within boundaries. Subject 2: Looking back, my biggest regret would be that I was not bold enough to try more and challenge myself. I would tell my younger self to start earlier, do my best, and even if I fail, try again until I succeed. What stopped me was fear and hesitation — thinking 'What if I am wrong?' or 'What if I fail?' Instead of waiting for change, I should have gone after it."
 ];
@@ -245,7 +245,7 @@ const surveyPart3 = [
   "I want our team to be more than a group that delivers today's work well. I want us to become a team that defines future challenges early and solves them with stronger capability, AiO, and a true culture of innovation — because that is how we unlock the full potential of our people.",
   "Don't waste your time on doing something proven but used for many years without being challenged. Try to learn something unfamiliar and do your job in a new way which requires recent technologies.",
   "Be flexible to new tech",
-  "마음에 들지 않는 부분이 있어도 난 우리 회사를 사랑함. 회사가 지향하는 부분이 방향이 맞다면 우리는 반대의 에너지를 써서 전체적인 노력을 반감시킬게 아니라 긍정적인 시각으로 회사의 방향에 동참하면서 개선해야 할 부분에 대한 의견을 나누는 것이 필요함. AIO / Innovation 의 mindset 을 갖춰야 하는 부분은 대 찬성. 하지만 지금의 추진 방법은 다시 한번 생각해볼 필요가 있음.",
+  "Even when there are parts I don't like, I love our company. If the direction the company is pursuing is right, we shouldn't use negative energy that undermines the overall effort — we should join positively while sharing opinions on what needs improvement. I strongly support building an AiO / Innovation mindset. But the current approach to pushing it forward needs to be reconsidered.",
   "No growth, no future.",
   "Don't wait for change — go after it. Keep learning and growing, because this is a mindset that matters anywhere, not just here."
 ];
