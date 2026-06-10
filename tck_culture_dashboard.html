@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCK Culture Dashboard — Leadership Survey</title>
+<title>TCK Culture Survey Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -376,7 +376,7 @@ body {
   <div class="topbar-brand" onclick="_toggleSurveyPicker(event)">
     <div class="topbar-dot"></div>
     <div class="survey-picker-wrap">
-      <div class="topbar-title" id="topbarTitle">TCK Culture Dashboard<span class="picker-arrow">▾</span></div>
+      <div class="topbar-title" id="topbarTitle">TCK Culture Survey Dashboard<span class="picker-arrow">▾</span></div>
       <div class="topbar-sub">Leadership Survey Intelligence</div>
       <div class="survey-picker" id="surveyPicker"></div>
     </div>
@@ -391,6 +391,7 @@ body {
     <button onclick="_toggleSurveysDropdown(event)" id="surveysNavBtn">My Surveys ▾</button>
     <div class="surveys-dropdown" id="surveysDropdown"></div>
   </div>
+  <div class="wave-badge">Jun 2026</div>
 </div>
 
 <div class="wrapper">
@@ -478,7 +479,7 @@ body {
   <div class="sec-header" style="margin-top:2rem;">
     <div class="sec-title">Leadership Action Plan</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Based on survey findings · June 2026</div>
+    <div class="sec-tag">June 2026</div>
   </div>
   <div style="margin-bottom:2rem;">
     <div class="action-item">
@@ -863,7 +864,7 @@ body {
     <div class="wave-node active">
       <div class="wave-dot"></div>
       <div class="wave-score">58%</div>
-      <div class="wave-label">Wave 1<br>Jun 2026</div>
+      <div class="wave-label">Jun 2026</div>
     </div>
     <div class="wave-node future">
       <div class="wave-dot"></div>
@@ -887,11 +888,11 @@ body {
     </div>
   </div>
 
-  <!-- WAVE 1 DETAIL -->
+  <!-- SURVEY DETAIL -->
   <div class="card" style="margin-bottom:14px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
       <div>
-        <div style="font-size: 11px; font-family: 'DM Sans', sans-serif; color: var(--accent); margin-bottom: 4px;">WAVE 1 — JUNE 2026</div>
+        <div style="font-size: 11px; font-family: 'DM Sans', sans-serif; color: var(--accent); margin-bottom: 4px;">JUNE 2026</div>
         <div style="font-family: 'DM Sans', sans-serif; font-size: 20px;">Culture Baseline Survey</div>
       </div>
       <div style="text-align: right;">
@@ -1156,7 +1157,7 @@ body {
 </div><!-- /wrapper -->
 
 <div class="footer">
-  TCK Culture Dashboard &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Confidential — For Senior Leadership Only
+  TCK Culture Survey Dashboard &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Confidential — For Senior Leadership Only
 </div>
 
 <script>
@@ -1755,7 +1756,7 @@ function _populateSurveyPicker() {
     <div class="survey-picker-item ${tckActive ? 'picker-active' : ''}" onclick="_pickSurvey('overview')">
       <div class="picker-dot" style="background:#7c6aff;"></div>
       <div>
-        <div class="picker-name">TCK Culture Dashboard</div>
+        <div class="picker-name">TCK Culture Survey Dashboard</div>
         <div class="picker-meta">Jun 2026 &nbsp;·&nbsp; 34 respondents</div>
       </div>
     </div>`;
@@ -2038,7 +2039,7 @@ function showPage(id) {
   });
   const titleEl = document.getElementById('topbarTitle');
   if (titleEl) {
-    let label = 'TCK Culture Dashboard';
+    let label = 'TCK Culture Survey Dashboard';
     if (!_isTCK) {
       const _all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
       const _sv = _all.find(s => 'sv-' + s.id === id);
@@ -2248,7 +2249,7 @@ new Chart(document.getElementById('radarChart'), {
   data: {
     labels: ['Direction\nAlignment', 'Emotional\nReadiness', 'Time\nAvailability', 'Skill\nConfidence', 'Manager\nSupport', 'System\nEnablement'],
     datasets: [{
-      label: 'Wave 1',
+      label: 'Jun 2026',
       data: [78, 45, 32, 55, 48, 38],
       borderColor: darkPalette.purple,
       backgroundColor: 'rgba(124,106,255,0.15)',
