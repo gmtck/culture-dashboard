@@ -1,0 +1,2843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCK Culture Pulse — Leadership Survey Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #18181f;
+  --card: #1c1c25;
+  --card2: #22222e;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f5;
+  --text2: #9090a8;
+  --text3: #5a5a72;
+  --accent: #7c6aff;
+  --accent2: #a855f7;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --teal: #14b8a6;
+  --pink: #ec4899;
+  --blue: #3b82f6;
+  --radius: 12px;
+  --radius-lg: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.topbar-brand { display: flex; align-items: center; gap: 10px; }
+.topbar-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 16px; letter-spacing: 0.02em; }
+.topbar-sub { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+.topbar-nav { display: flex; gap: 4px; }
+.topbar-nav button {
+  background: none; border: none; color: var(--text2); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+}
+.topbar-nav button:hover, .topbar-nav button.active { background: var(--card); color: var(--text); }
+.wave-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  background: rgba(124,106,255,0.15); border: 0.5px solid rgba(124,106,255,0.3);
+  color: var(--accent); padding: 4px 12px; border-radius: 20px; cursor: pointer;
+  transition: all 0.2s;
+}
+.wave-badge:hover { background: rgba(124,106,255,0.25); }
+
+/* LAYOUT */
+.wrapper { margin-top: 60px; }
+.page { display: none; padding: 2rem; max-width: 1320px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* HERO SECTION */
+.hero {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px;
+  margin-bottom: 2rem;
+}
+.hero-card {
+  background: var(--card); border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+  position: relative; overflow: hidden;
+}
+.hero-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.hero-card.accent-purple::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.hero-card.accent-green::before { background: linear-gradient(90deg, var(--green), #86efac); }
+.hero-card.accent-amber::before { background: linear-gradient(90deg, var(--amber), #fcd34d); }
+.hero-card.accent-red::before { background: linear-gradient(90deg, var(--red), #f87171); }
+.hero-label { font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.hero-value { font-family: 'DM Serif Display', serif; font-size: 38px; color: var(--text); }
+.hero-desc { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.hero-trend { font-size: 11px; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.trend-up { color: var(--green); }
+.trend-new { color: var(--accent); }
+
+/* SECTION HEADERS */
+.sec-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1.25rem; margin-top: 2rem; }
+.sec-title { font-family: 'DM Serif Display', serif; font-size: 22px; }
+.sec-line { flex: 1; height: 0.5px; background: var(--border); }
+.sec-tag { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text3); }
+
+/* GRID LAYOUTS */
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-21 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+.grid-12 { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; }
+
+/* CARD BASE */
+.card {
+  background: var(--card); border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+}
+.card-title { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'JetBrains Mono', monospace; }
+
+/* THEME BARS */
+.theme-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.theme-name { font-size: 13px; color: var(--text); width: 140px; flex-shrink: 0; }
+.theme-bar-track { flex: 1; background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
+.theme-bar-fill { height: 6px; border-radius: 4px; transition: width 1s ease; }
+.theme-count { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; width: 32px; text-align: right; }
+
+/* QUOTE CARDS */
+.quote-list { display: flex; flex-direction: column; gap: 8px; }
+.quote-item {
+  background: var(--bg3); border-radius: 10px; padding: 10px 14px;
+  border-left: 2px solid transparent; font-size: 13px; color: var(--text2); line-height: 1.6;
+  transition: all 0.2s;
+}
+.quote-item:hover { background: var(--card2); color: var(--text); }
+.quote-item.q-green { border-left-color: var(--green); }
+.quote-item.q-red { border-left-color: var(--red); }
+.quote-item.q-amber { border-left-color: var(--amber); }
+.quote-item.q-purple { border-left-color: var(--accent); }
+.quote-item.q-teal { border-left-color: var(--teal); }
+
+/* PILL TAGS */
+.pill { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.pill-green { background: rgba(34,197,94,0.12); color: var(--green); border: 0.5px solid rgba(34,197,94,0.25); }
+.pill-red { background: rgba(239,68,68,0.12); color: var(--red); border: 0.5px solid rgba(239,68,68,0.25); }
+.pill-amber { background: rgba(245,158,11,0.12); color: var(--amber); border: 0.5px solid rgba(245,158,11,0.25); }
+.pill-purple { background: rgba(124,106,255,0.12); color: var(--accent); border: 0.5px solid rgba(124,106,255,0.25); }
+.pill-teal { background: rgba(20,184,166,0.12); color: var(--teal); border: 0.5px solid rgba(20,184,166,0.25); }
+.pill-blue { background: rgba(59,130,246,0.12); color: var(--blue); border: 0.5px solid rgba(59,130,246,0.25); }
+
+/* INSIGHT BLOCKS */
+.insight-block { border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.insight-block.ib-green { background: rgba(34,197,94,0.06); border: 0.5px solid rgba(34,197,94,0.2); }
+.insight-block.ib-red { background: rgba(239,68,68,0.06); border: 0.5px solid rgba(239,68,68,0.2); }
+.insight-block.ib-amber { background: rgba(245,158,11,0.06); border: 0.5px solid rgba(245,158,11,0.2); }
+.insight-block.ib-purple { background: rgba(124,106,255,0.06); border: 0.5px solid rgba(124,106,255,0.2); }
+.insight-label { font-size: 11px; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+.insight-text { font-size: 13px; color: var(--text); line-height: 1.7; }
+.ib-green .insight-label { color: var(--green); }
+.ib-red .insight-label { color: var(--red); }
+.ib-amber .insight-label { color: var(--amber); }
+.ib-purple .insight-label { color: var(--accent); }
+
+/* ACTION ITEMS */
+.action-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--card2); border: 0.5px solid var(--border);
+  border-radius: var(--radius); padding: 14px 18px; margin-bottom: 10px;
+  transition: all 0.2s;
+}
+.action-item:hover { border-color: var(--border2); background: rgba(124,106,255,0.06); }
+.action-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(124,106,255,0.2); color: var(--accent);
+  font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: 'DM Serif Display', serif;
+}
+.action-body { flex: 1; }
+.action-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.action-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.action-priority { font-size: 10px; font-family: 'JetBrains Mono', monospace; margin-top: 6px; }
+
+/* MANTRA */
+.mantra-card {
+  background: var(--bg3); border-radius: var(--radius); padding: 14px 18px;
+  border-left: 2px solid var(--accent); margin-bottom: 8px;
+  font-size: 13px; color: var(--text); line-height: 1.7;
+  font-style: italic;
+}
+
+/* WAVE TIMELINE */
+.wave-timeline { display: flex; gap: 0; margin-bottom: 2rem; position: relative; }
+.wave-timeline::before {
+  content: ''; position: absolute; top: 22px; left: 40px; right: 40px; height: 1px;
+  background: var(--border); z-index: 0;
+}
+.wave-node {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; padding: 12px 8px; border-radius: var(--radius); transition: all 0.2s;
+  position: relative; z-index: 1;
+}
+.wave-node:hover, .wave-node.active { background: var(--card); }
+.wave-dot {
+  width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border2);
+  background: var(--bg3); transition: all 0.3s;
+}
+.wave-node.active .wave-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px rgba(124,106,255,0.5); }
+.wave-node.future .wave-dot { border-style: dashed; opacity: 0.4; }
+.wave-label { font-size: 11px; color: var(--text3); text-align: center; font-family: 'JetBrains Mono', monospace; }
+.wave-node.active .wave-label { color: var(--accent); }
+.wave-score { font-size: 18px; font-family: 'DM Serif Display', serif; color: var(--text); }
+.wave-node.future .wave-score { color: var(--text3); }
+
+/* COMPARE TABLE */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table th { text-align: left; padding: 8px 12px; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text3); font-weight: 400; border-bottom: 0.5px solid var(--border); }
+.compare-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: top; color: var(--text2); line-height: 1.5; }
+.compare-table td:first-child { color: var(--text); font-weight: 500; width: 160px; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--bg3); }
+
+/* CHART CONTAINER */
+.chart-wrap { position: relative; width: 100%; }
+
+/* REGRET SECTION */
+.regret-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+.regret-item { background: var(--bg3); border-radius: var(--radius); padding: 12px 16px; }
+.regret-tag { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--red); margin-bottom: 6px; }
+.regret-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+/* UPLOAD AREA */
+.upload-zone {
+  border: 1.5px dashed var(--border2); border-radius: var(--radius-lg);
+  padding: 3rem; text-align: center; cursor: pointer;
+  transition: all 0.3s; background: var(--card);
+}
+.upload-zone:hover { border-color: var(--accent); background: rgba(124,106,255,0.05); }
+.upload-icon { font-size: 32px; margin-bottom: 12px; }
+.upload-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+.upload-sub { font-size: 13px; color: var(--text3); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* FOOTER */
+.footer { text-align: center; padding: 3rem 2rem; font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; border-top: 0.5px solid var(--border); margin-top: 3rem; }
+
+/* ANIM */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.page.active .hero-card { animation: fadeUp 0.4s ease both; }
+.page.active .hero-card:nth-child(1) { animation-delay: 0.05s; }
+.page.active .hero-card:nth-child(2) { animation-delay: 0.1s; }
+.page.active .hero-card:nth-child(3) { animation-delay: 0.15s; }
+.page.active .hero-card:nth-child(4) { animation-delay: 0.2s; }
+
+/* SURVEY CARD — DELETE BUTTON */
+.survey-card { position: relative; }
+.card-delete-btn {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(239,68,68,0.08); border: 0.5px solid rgba(239,68,68,0.2);
+  color: var(--red); font-size: 18px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.card-delete-btn:hover { background: rgba(239,68,68,0.22); border-color: rgba(239,68,68,0.4); }
+
+/* SAVE BAR */
+.survey-save-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: rgba(124,106,255,0.06); border: 0.5px solid rgba(124,106,255,0.2);
+  border-radius: var(--radius); padding: 12px 18px; margin-bottom: 14px;
+}
+.survey-name-input {
+  flex: 1; min-width: 180px; background: var(--bg3);
+  border: 0.5px solid var(--border2); border-radius: 8px;
+  color: var(--text); padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none;
+}
+.survey-name-input:focus { border-color: var(--accent); }
+.btn-save {
+  background: var(--accent); color: white; border: none;
+  padding: 9px 20px; border-radius: 8px; font-size: 13px;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500;
+  white-space: nowrap; transition: opacity 0.2s;
+}
+.btn-save:hover { opacity: 0.85; }
+.btn-save.saved { background: var(--green); }
+
+/* DYNAMIC SURVEY NAV BUTTONS */
+.dyn-survey-btn {
+  background: rgba(124,106,255,0.12) !important; border: 0.5px solid rgba(124,106,255,0.25) !important;
+  color: var(--accent) !important; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dyn-survey-btn:hover, .dyn-survey-btn.active { background: rgba(124,106,255,0.25) !important; color: var(--text) !important; }
+
+/* MY SURVEYS DROPDOWN (legacy, hidden) */
+.surveys-nav-wrap { position: relative; display: none; }
+.surveys-dropdown {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  background: var(--card); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-lg); min-width: 290px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5); z-index: 500;
+  overflow: hidden; display: none;
+}
+.surveys-dropdown.open { display: block; }
+.surveys-dd-header { padding: 12px 16px; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text3); border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; }
+.surveys-dd-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.surveys-dd-item:last-child { border-bottom: none; }
+.surveys-dd-item:hover { background: var(--card2); }
+.surveys-dd-name { font-size: 13px; color: var(--text); font-weight: 500; }
+.surveys-dd-date { font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+.surveys-dd-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; padding: 2px 6px; border-radius: 4px; transition: all 0.15s; line-height: 1; flex-shrink: 0; }
+.surveys-dd-del:hover { color: var(--red); background: rgba(239,68,68,0.1); }
+.surveys-dd-empty { padding: 20px 16px; font-size: 13px; color: var(--text3); text-align: center; }
+
+/* SURVEY PICKER (title-area dropdown) */
+.topbar-brand { cursor: pointer; user-select: none; }
+.topbar-brand:hover .topbar-title { color: var(--accent); }
+.picker-arrow { opacity: 0.45; font-size: 11px; margin-left: 4px; display: inline-block; transition: transform 0.2s; }
+.survey-picker-wrap { position: relative; }
+.survey-picker {
+  position: absolute; top: calc(100% + 10px); left: 0;
+  background: var(--card); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-lg); min-width: 300px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.65); z-index: 600;
+  overflow: hidden; display: none;
+}
+.survey-picker.open { display: block; }
+.survey-picker-header {
+  padding: 10px 16px; font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase;
+  border-bottom: 0.5px solid var(--border);
+}
+.survey-picker-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  cursor: pointer; transition: background 0.15s; border-bottom: 0.5px solid var(--border);
+}
+.survey-picker-item:last-child { border-bottom: none; }
+.survey-picker-item:hover { background: var(--card2); }
+.survey-picker-item.picker-active { background: rgba(124,106,255,0.08); }
+.picker-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.picker-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.picker-meta { font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr 1fr; }
+  .grid-3, .grid-2, .grid-21, .grid-12 { grid-template-columns: 1fr; }
+}
+
+/* THEME TOOLTIP */
+.theme-item[data-has-quotes] { cursor: default; }
+.theme-item[data-has-quotes]:hover { background: rgba(255,255,255,0.025); border-radius: 6px; margin-left: -6px; padding-left: 6px; }
+#themeTooltip {
+  position: fixed; z-index: 9999; pointer-events: none;
+  background: var(--card2); border: 0.5px solid var(--border2);
+  border-radius: var(--radius-lg); padding: 14px 16px;
+  min-width: 300px; max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  opacity: 0; transition: opacity 0.15s; display: none;
+}
+#themeTooltip.tt-visible { opacity: 1; display: block; }
+#themeTooltip .tt-head {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+}
+#themeTooltip .tt-q {
+  font-size: 12px; color: var(--text2); line-height: 1.55;
+  padding: 7px 12px; background: var(--bg3); border-radius: 6px; margin-bottom: 7px;
+}
+#themeTooltip .tt-q:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand" onclick="_toggleSurveyPicker(event)">
+    <div class="topbar-dot"></div>
+    <div class="survey-picker-wrap">
+      <div class="topbar-title" id="topbarTitle">TCK Culture Pulse<span class="picker-arrow">▾</span></div>
+      <div class="topbar-sub">Leadership Survey Intelligence</div>
+      <div class="survey-picker" id="surveyPicker"></div>
+    </div>
+  </div>
+  <div class="topbar-nav">
+    <button class="active" data-tck onclick="showPage('overview')">Overview</button>
+    <button data-tck onclick="showPage('part1')">Culture Snapshot</button>
+    <button data-tck onclick="showPage('part2')">Leadership Voices</button>
+    <button data-tck onclick="showPage('actions')">Actions & Mantras</button>
+    <button data-tck onclick="showPage('waves')">All Waves</button>
+    <button data-tck onclick="showPage('sectionb')">Section B Files</button>
+    <button onclick="showPage('analyzer')">✦ New Survey</button>
+  </div>
+  <div class="surveys-nav-wrap" id="surveysNavWrap">
+    <button onclick="_toggleSurveysDropdown(event)" id="surveysNavBtn">My Surveys ▾</button>
+    <div class="surveys-dropdown" id="surveysDropdown"></div>
+  </div>
+  <div class="wave-badge" onclick="showPage('waves')">Wave 1 — Jun 2026</div>
+</div>
+
+<div class="wrapper">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: OVERVIEW -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Executive Overview</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">Wave 1 · June 2026 · 32 leaders</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-card accent-purple">
+      <div class="hero-label">Respondents</div>
+      <div class="hero-value">32</div>
+      <div class="hero-desc">of ~32 invited leaders</div>
+      <div class="hero-trend trend-up">↑ 97% participation rate</div>
+    </div>
+    <div class="hero-card accent-green">
+      <div class="hero-label">Positive themes</div>
+      <div class="hero-value">6</div>
+      <div class="hero-desc">Teamwork, Safety, Ownership top 3</div>
+    </div>
+    <div class="hero-card accent-amber">
+      <div class="hero-label">Critical concerns</div>
+      <div class="hero-value">7</div>
+      <div class="hero-desc">Trust & empowerment most cited</div>
+    </div>
+    <div class="hero-card accent-red">
+      <div class="hero-label">Culture readiness</div>
+      <div class="hero-value">58<span style="font-size:20px;">%</span></div>
+      <div class="hero-desc">Estimated from qualitative signals</div>
+    </div>
+  </div>
+
+  <!-- ONE-LINE STORY -->
+  <div style="background: linear-gradient(135deg, rgba(124,106,255,0.1), rgba(168,85,247,0.05)); border: 0.5px solid rgba(124,106,255,0.25); border-radius: var(--radius-lg); padding: 1.5rem 2rem; margin-bottom: 2rem;">
+    <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 8px;">THE STORY IN ONE LINE</div>
+    <div style="font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); line-height: 1.5;">Leaders understand the direction — but lack the conditions, clarity, and time to execute cultural change meaningfully.</div>
+  </div>
+
+  <div class="grid-21">
+    <!-- AHA MOMENTS -->
+    <div class="card">
+      <div class="card-title">Top 3 "Aha" Moments</div>
+      <div class="insight-block ib-amber">
+        <div class="insight-label">AHA #1 — The WHY is missing</div>
+        <div class="insight-text">The single most repeated theme across all three questions in Part 1. Leaders say they see the "what" but can't explain the "why" to their teams. Culture change without meaning is just compliance.</div>
+      </div>
+      <div class="insight-block ib-red">
+        <div class="insight-label">AHA #2 — AiO is supported, but the execution model is not</div>
+        <div class="insight-text">Multiple leaders called out that the current AiO implementation tracks numbers, not real skill growth. "It's only tracking numbers, not realistic skills achieved." The strategy is right — the measurement is wrong.</div>
+      </div>
+      <div class="insight-block ib-purple">
+        <div class="insight-label">AHA #3 — Leaders already know their regrets</div>
+        <div class="insight-text">In Part 2 (the time-travel question), nearly all leaders said they'd regret moving too slowly and not investing more in people. They know what needs to change. The question Brian should ask: what's still stopping them today?</div>
+      </div>
+    </div>
+
+    <!-- SENTIMENT BREAKDOWN -->
+    <div class="card">
+      <div class="card-title">Sentiment Split</div>
+      <div style="margin-bottom: 16px;">
+        <div class="chart-wrap" style="height: 200px;">
+          <canvas id="sentimentChart" role="img" aria-label="Sentiment breakdown across survey responses showing 38% positive, 35% concerns, 27% gaps"></canvas>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2);">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #22c55e; display: inline-block;"></span> Positive signals (Q1)
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2);">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #ef4444; display: inline-block;"></span> Concerns & frictions (Q2)
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2);">
+          <span style="width: 10px; height: 10px; border-radius: 2px; background: #3b82f6; display: inline-block;"></span> Gaps & missing elements (Q3)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY TENSIONS -->
+  <div class="sec-header">
+    <div class="sec-title">Key Tensions</div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--amber); margin-bottom: 10px;">TENSION 01</div>
+      <div style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">Speed vs. Quality</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.6;">Urgency culture produces outputs that feel compromised. Leaders want to move fast AND do it right — but today the system only rewards speed.</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--red); margin-bottom: 10px;">TENSION 02</div>
+      <div style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">Upskilling vs. Time</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.6;">Leaders are asked to learn new skills while daily workload remains unchanged. No structural time = no real upskilling. It becomes a message, not a practice.</div>
+    </div>
+    <div class="card">
+      <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--teal); margin-bottom: 10px;">TENSION 03</div>
+      <div style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">Empowerment vs. Control</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.6;">CAP goal tracking, approval processes, and top-down decisions conflict with the stated culture of ownership and autonomy. Leaders feel this contradiction acutely.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: PART 1 - CULTURE SNAPSHOT -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-part1">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Culture Snapshot</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">Part 1 · Q1–Q3 · 32 responses</div>
+  </div>
+
+  <div class="grid-3">
+    <!-- Q1: LIKES -->
+    <div class="card">
+      <div class="card-title" style="color: #22c55e;">✓ What leaders like (Q1)</div>
+      <div class="theme-item">
+        <div class="theme-name">Teamwork & collaboration</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:88%; background:var(--green);"></div></div>
+        <div class="theme-count">88%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Safety-first culture</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:72%; background:var(--green);"></div></div>
+        <div class="theme-count">72%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Ownership mindset</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:65%; background:var(--green);"></div></div>
+        <div class="theme-count">65%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Flat hierarchy</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:55%; background:var(--green);"></div></div>
+        <div class="theme-count">55%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Execution commitment</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:48%; background:var(--green);"></div></div>
+        <div class="theme-count">48%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">East-West balance</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:35%; background:var(--green);"></div></div>
+        <div class="theme-count">35%</div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="quote-item q-green">"Freedom to think and act differently without fear"</div>
+        <div class="quote-item q-green">"Safety First — I like the passion and commitment of TCK people"</div>
+        <div class="quote-item q-green">"Horizontal communication and a genuine sense of responsibility"</div>
+      </div>
+    </div>
+
+    <!-- Q2: DISLIKES -->
+    <div class="card">
+      <div class="card-title" style="color: #ef4444;">✗ What leaders dislike (Q2)</div>
+      <div class="theme-item">
+        <div class="theme-name">Speed over quality</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:82%; background:var(--red);"></div></div>
+        <div class="theme-count">82%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Meeting overload</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:75%; background:var(--red);"></div></div>
+        <div class="theme-count">75%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Silo thinking</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:68%; background:var(--red);"></div></div>
+        <div class="theme-count">68%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Resistance to change</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:62%; background:var(--red);"></div></div>
+        <div class="theme-count">62%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Top-down decisions</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:55%; background:var(--red);"></div></div>
+        <div class="theme-count">55%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Lack of clarity from leadership</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:48%; background:var(--red);"></div></div>
+        <div class="theme-count">48%</div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="quote-item q-red">"Speed above all — deadlines are short and urgent, outputs feel short-sighted"</div>
+        <div class="quote-item q-red">"Hesitation to speak up — people complain rather than seeing the bright side"</div>
+        <div class="quote-item q-red">"TCK asks people to change quickly but doesn't give them clarity, time, or support"</div>
+      </div>
+    </div>
+
+    <!-- Q3: MISSING -->
+    <div class="card">
+      <div class="card-title" style="color: #3b82f6;">△ What's missing (Q3)</div>
+      <div class="theme-item">
+        <div class="theme-name">Trust & honest dialogue</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:85%; background:var(--blue);"></div></div>
+        <div class="theme-count">85%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">The "WHY" of change</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:78%; background:var(--blue);"></div></div>
+        <div class="theme-count">78%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Real empowerment</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:70%; background:var(--blue);"></div></div>
+        <div class="theme-count">70%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Company pride</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:60%; background:var(--blue);"></div></div>
+        <div class="theme-count">60%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Future investment</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:52%; background:var(--blue);"></div></div>
+        <div class="theme-count">52%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Shared ownership mindset</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:45%; background:var(--blue);"></div></div>
+        <div class="theme-count">45%</div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="quote-item q-amber">"The WHY is lacking — what's missing most"</div>
+        <div class="quote-item q-amber">"Micro-management rather than empowerment prevents leaders from managing their teams"</div>
+        <div class="quote-item q-amber">"We need more trust, honest communication, and visible support for people struggling with change"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title">Voice of 32 Leaders</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">크기 = 언급 빈도 &nbsp;·&nbsp; 색상 = 질문 그룹</div>
+  </div>
+  <div class="card" style="padding:2rem 1.5rem;">
+    <div id="wordCloud" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 18px;min-height:260px;"></div>
+    <div style="display:flex;gap:20px;justify-content:center;margin-top:20px;padding-top:16px;border-top:0.5px solid var(--border);">
+      <span style="font-size:12px;color:var(--green);">● What leaders like (Q1)</span>
+      <span style="font-size:12px;color:var(--red);">● What leaders dislike (Q2)</span>
+      <span style="font-size:12px;color:var(--blue);">● What's missing (Q3)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: PART 2 - LEADERSHIP VOICES -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-part2">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Leadership Voices</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">Part 2 · Personal reflections · 32 leaders</div>
+  </div>
+
+
+  <!-- ── SUBJECT 1: AiO VISION ── -->
+  <div class="sec-header">
+    <div class="sec-title" style="font-size:18px;">Subject 1 — AiO &amp; Upskilling Vision</div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div style="background:rgba(20,184,166,0.04);border:0.5px solid rgba(20,184,166,0.18);border-radius:var(--radius);padding:14px 18px;margin-bottom:1.5rem;">
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;gap:10px;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);flex-shrink:0;margin-top:2px;">Q1</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">To differentiate TCK and increase competitiveness, we are building a culture around the value of upskilling and having a wider bandwidth of skills (AiO). If this succeeded fully, what would that allow TCK to do that we can't do today?</span></div>
+      <div style="display:flex;gap:10px;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);flex-shrink:0;margin-top:2px;">Q2</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">One day you won't be in your current role. When you look back on your time at GM, on this effort, what story would you be most proud to tell?</span></div>
+    </div>
+  </div>
+
+  <!-- AiO Convergence chart -->
+  <div class="card" style="margin-bottom:1.5rem;padding:20px 22px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;">
+      <div style="flex:1;min-width:220px;">
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">VISION THEMES — 32명 중 언급 빈도</div>
+        <div style="display:flex;flex-direction:column;gap:9px;">
+          <div data-lv-tip="vision-1" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">People freed from limitation</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--teal);">25 / 32</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:86%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-2" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Culture of genuine growth investment</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--teal);">23 / 32</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:79%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-3" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Faster cross-boundary problem solving</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--teal);">22 / 32</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:76%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-4" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">TCK as most valued center in GM</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--teal);">20 / 32</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:69%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-5" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Engineers reinvented physical → virtual</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--teal);">17 / 32</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:59%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.1em;margin-bottom:12px;">32 LEADERS</div>
+        <div id="aioDots" style="display:flex;flex-wrap:wrap;gap:5px;width:152px;"></div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <span style="font-size:10px;color:var(--teal);">● 성장 비전 정렬 (27)</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:3px;">
+          <span style="font-size:10px;color:var(--amber);">● 시스템 우려 (5)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);letter-spacing:0.1em;margin-bottom:12px;">THE SHARED NORTH STAR</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:16px;">When asked to picture TCK fully succeeding at AiO, leaders didn't describe metrics or rankings — they described <strong style="color:var(--text);">people freed from limitation.</strong> The aspiration is deeply human, not just organizational.</div>
+      <div class="quote-item q-teal" style="margin-bottom:7px;">People solving problems across boundaries — not limited by their job titles or narrow role definitions</div>
+      <div class="quote-item q-teal" style="margin-bottom:7px;">Engineers who reinvented themselves from physical to virtual, securing both their relevance and TCK's future</div>
+      <div class="quote-item q-teal" style="margin-bottom:7px;">A culture where people grew stronger not because they were forced, but because the org genuinely invested in them</div>
+      <div class="quote-item q-teal">TCK as the most valued engineering center in GM — not just in output, but in capability</div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);letter-spacing:0.1em;margin-bottom:12px;">THE UNSPOKEN TENSION</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:16px;">But beneath the aspiration, a quiet friction surfaces. Leaders can articulate the dream — they struggle to see how the <em>current system</em> gets them there. The ask and the environment are in direct conflict.</div>
+      <div class="insight-block ib-amber">
+        <div class="insight-label">The structural paradox</div>
+        <div class="insight-text">Leaders are being asked to change the culture while being measured by the old culture's metrics. The result: change initiatives become performance theater rather than real transformation.</div>
+      </div>
+      <div class="insight-block ib-red">
+        <div class="insight-label">The aspiration-action gap</div>
+        <div class="insight-text">What leaders say they'd be "most proud of" — people growing beyond their job titles — is precisely what the approval-heavy, micro-managed environment makes hardest to achieve.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:flex-start;background:rgba(124,106,255,0.05);border:0.5px solid rgba(124,106,255,0.18);border-radius:var(--radius);padding:16px 20px;margin-bottom:2.5rem;">
+    <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--accent);letter-spacing:0.08em;padding-top:2px;flex-shrink:0;line-height:1.6;">WHAT THIS<br>REQUIRES</div>
+    <div style="width:0.5px;background:rgba(124,106,255,0.2);align-self:stretch;flex-shrink:0;"></div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.75;">This isn't a knowledge gap — leaders already know what good looks like. It's a <strong style="color:var(--text);">structural gap.</strong> Brian's role isn't to inspire harder. It's to remove the system-level blockers that make leaders feel like they're running forward in concrete: protected learning time, reduced approval layers, and AiO metrics that measure demonstrated capability rather than attendance.</div>
+  </div>
+
+  <!-- ── SUBJECT 2: TIME MACHINE ── -->
+  <div class="sec-header">
+    <div class="sec-title" style="font-size:18px;">Subject 2 — The Time Machine: 2036 → 2026</div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div style="background:rgba(239,68,68,0.04);border:0.5px solid rgba(239,68,68,0.15);border-radius:var(--radius);padding:14px 18px;margin-bottom:1.5rem;">
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div style="display:flex;gap:10px;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);flex-shrink:0;margin-top:2px;">Q1</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">You are in the year 2036. Because of technology, you can briefly go "back in time" and talk to your 15-years-younger self. What do you tell your younger self was your biggest regret as a TCK leader that you would do differently if you had your time over again?</span></div>
+      <div style="display:flex;gap:10px;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);flex-shrink:0;margin-top:2px;">Q2</span><span style="font-size:13px;color:var(--text2);line-height:1.6;">What do you tell your younger self was preventing you from doing the above — and what would need to have changed, so it was no longer a regret?</span></div>
+    </div>
+  </div>
+
+  <!-- Regret convergence chart (mirrors vision bars + dot matrix) -->
+  <div class="card" style="margin-bottom:1.5rem;padding:20px 22px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;">
+      <div style="flex:1;min-width:220px;">
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">REGRET THEMES — 30명 중 26명의 응답 수렴</div>
+        <div style="display:flex;flex-direction:column;gap:9px;">
+          <div data-lv-tip="regret-speed" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Moved too slowly — bound by rules &amp; comfort zone</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--red);">13 / 30</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:43%;height:100%;background:var(--red);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-people" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not develop &amp; bring people along</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--amber);">8 / 30</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:27%;height:100%;background:var(--amber);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-capability" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not build future technical capability</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--blue);">5 / 30</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:17%;height:100%;background:var(--blue);border-radius:3px;"></div></div></div>
+          <div style="padding:4px 6px;border-radius:5px;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text3);">General statement — no specific regret named</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">4 / 30</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:13%;height:100%;background:var(--border2);border-radius:3px;"></div></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.1em;margin-bottom:12px;">30 RESPONSES</div>
+        <div id="regretDots" style="display:flex;flex-wrap:wrap;gap:4px;width:110px;"></div>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <span style="font-size:10px;color:var(--red);">● 속도/규칙 (13)</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:3px;">
+          <span style="font-size:10px;color:var(--amber);">● 사람 개발 (8)</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:3px;">
+          <span style="font-size:10px;color:var(--blue);">● 미래 역량 (5)</span>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:3px;">
+          <span style="font-size:10px;color:var(--text3);">● 일반 코멘트 (4)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:0.1em;margin-bottom:12px;">THE DOMINANT REGRET — 50% OF ALL VOICES</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;">Half of all leaders would tell their younger self the same thing: <strong style="color:var(--text);">you were too careful, too faithful to the rules, too slow.</strong> The regret isn't about the wrong direction — it's about accepting the pace the system set instead of demanding more.</div>
+      <div class="quote-item q-red" style="margin-bottom:6px;">"Just followed blindly the BP and guidelines without questioning"</div>
+      <div class="quote-item q-red" style="margin-bottom:6px;">"My biggest regret would be relying too heavily on standards and processes — it slowed down execution"</div>
+      <div class="quote-item q-red">"I would tell myself to wake up and realize the old way is a plan to fail"</div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);letter-spacing:0.1em;margin-bottom:12px;">THE HUMAN GAP — PEOPLE LEFT BEHIND</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;">Nearly 1 in 3 leaders regret the same blind spot: they managed the work but missed the people inside it — pushing forward without checking whether teams were ready, or even being carried along.</div>
+      <div class="insight-block ib-amber">
+        <div class="insight-label">The human cost of speed</div>
+        <div class="insight-text">"Not speaking up earlier about the human side of change — the pressure of immediate work made me believe people would eventually adapt on their own."</div>
+      </div>
+      <div class="insight-block ib-red">
+        <div class="insight-label">The bold mindset failure</div>
+        <div class="insight-text">"I hesitated to help set up a bold mindset in younger employees — I was concerned about how I might be perceived by leadership."</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:flex-start;background:rgba(239,68,68,0.04);border:0.5px solid rgba(239,68,68,0.15);border-radius:var(--radius);padding:16px 20px;margin-bottom:2.5rem;">
+    <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:0.08em;padding-top:2px;flex-shrink:0;line-height:1.6;">WHAT HELD<br>THEM BACK</div>
+    <div style="width:0.5px;background:rgba(239,68,68,0.2);align-self:stretch;flex-shrink:0;"></div>
+    <div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;">
+        <span class="pill pill-red" data-lv-tip="blocker-1">Daily pressure &amp; firefighting</span>
+        <span class="pill pill-red" data-lv-tip="blocker-2">Fear of failure without safety net</span>
+        <span class="pill pill-red" data-lv-tip="blocker-3">Budget constraints</span>
+        <span class="pill pill-red" data-lv-tip="blocker-4">Insufficient leadership support</span>
+        <span class="pill pill-red" data-lv-tip="blocker-5">Micro-management culture</span>
+        <span class="pill pill-red" data-lv-tip="blocker-6">Lack of psychological safety</span>
+      </div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;">These aren't excuses — they're a system diagnosis. The leaders who regret moving too slowly weren't passive — they were constrained. Daily pressure and a culture that punished challenge made boldness feel risky. <strong style="color:var(--text);">The environment is what needs to change.</strong></div>
+    </div>
+  </div>
+
+  <!-- ── SUBJECT 3: READINESS ── -->
+  <div class="sec-header">
+    <div class="sec-title" style="font-size:18px;">The Direction–Enablement Gap</div>
+    <div class="sec-line"></div>
+    <div style="font-size:13px;color:var(--text2);margin-top:8px;">The most important number on this chart isn't the highest — it's the distance between the highest and lowest.</div>
+  </div>
+
+  <div style="background:rgba(239,68,68,0.05);border:0.5px solid rgba(239,68,68,0.18);border-radius:var(--radius);padding:14px 20px;margin-bottom:1.5rem;display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+    <div style="text-align:center;flex-shrink:0;">
+      <div style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--green);">78%</div>
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">Direction<br>alignment</div>
+    </div>
+    <div style="font-size:22px;color:var(--text3);">→</div>
+    <div style="text-align:center;flex-shrink:0;">
+      <div style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--red);">32%</div>
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">Time<br>availability</div>
+    </div>
+    <div style="width:0.5px;background:rgba(239,68,68,0.2);align-self:stretch;flex-shrink:0;"></div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.75;flex:1;min-width:200px;">A 46-point gap between where leaders want to go and their capacity to get there. This is not an alignment problem — <strong style="color:var(--text);">TCK has alignment.</strong> It is a capacity and enablement problem. Leaders are running at full speed in the wrong direction: managing now instead of building for next.</div>
+  </div>
+
+  <div class="grid-21">
+    <div class="card">
+      <div class="card-title">Readiness by dimension</div>
+      <div class="chart-wrap" style="height: 260px;">
+        <canvas id="radarChart" role="img" aria-label="Radar chart showing leadership readiness across 6 dimensions">Leadership readiness: Direction alignment 78, Emotional readiness 45, Time availability 32, Skill confidence 55, Manager support 48, System enablement 38.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">What the shape reveals</div>
+      <div class="insight-block ib-green">
+        <div class="insight-label">STRONG — Direction alignment (78%)</div>
+        <div class="insight-text">Leaders agree on where TCK must go. This is the foundation. Don't take it for granted — it can erode if the blockers aren't addressed.</div>
+      </div>
+      <div class="insight-block ib-amber">
+        <div class="insight-label">PARTIAL — Skill confidence (55%) &amp; Emotional readiness (45%)</div>
+        <div class="insight-text">Leaders believe in upskilling but aren't yet confident they can model it. They want to lead the change — they're just not sure they're equipped to go first.</div>
+      </div>
+      <div class="insight-block ib-red">
+        <div class="insight-label">CRITICAL GAP — Time (32%) &amp; System enablement (38%)</div>
+        <div class="insight-text">The two lowest scores are the two things Brian can actually change. These aren't attitude problems. Learning is an add-on, not a structural right. Processes and approvals are actively working against the culture being built.</div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.65;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--border);">The radar is skewed toward the top and hollow at the bottom. That shape has a name: <em style="color:var(--text2);">willing but unfree.</em> The intervention is structural, not motivational.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: ACTIONS & MANTRAS -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-actions">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Recommended Actions</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">Part 3 synthesis · Brian's next steps</div>
+  </div>
+
+  <div class="grid-21">
+    <div>
+      <div class="action-item">
+        <div class="action-num">1</div>
+        <div class="action-body">
+          <div class="action-title">Make the WHY visible — consistently and repetitively</div>
+          <div class="action-desc">The most cited gap across all 32 responses. Leaders can't translate culture change to their teams because the purpose isn't emotionally compelling or frequently reinforced. Brian needs to communicate meaning, not just mechanics — in every forum, every week.</div>
+          <div class="action-priority"><span class="pill pill-red">Critical</span> &nbsp; Leadership Comms</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">2</div>
+        <div class="action-body">
+          <div class="action-title">Create protected learning time — structurally, not optionally</div>
+          <div class="action-desc">Upskilling is being asked for on top of full workloads. This is mathematically impossible. A minimum of one dedicated learning block per week, per leader, needs to be formally protected and modeled from the top down.</div>
+          <div class="action-priority"><span class="pill pill-amber">High</span> &nbsp; People Operations</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">3</div>
+        <div class="action-body">
+          <div class="action-title">Shift AiO measurement from activity to actual skill demonstration</div>
+          <div class="action-desc">Multiple leaders explicitly called out that current tracking counts participation, not growth. Redesign the AiO progress model around demonstrated capability — projects completed with new skills, peer recognition, applied outcomes.</div>
+          <div class="action-priority"><span class="pill pill-amber">High</span> &nbsp; AiO Program Design</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">4</div>
+        <div class="action-body">
+          <div class="action-title">Evaluate leaders on cultural behavior, not just visibility</div>
+          <div class="action-desc">Several responses noted leaders who "present a different face to leadership vs. staff." The current system rewards performance theater. Introduce 360-style cultural behavior assessment into the leadership performance review cycle.</div>
+          <div class="action-priority"><span class="pill pill-purple">Medium</span> &nbsp; Leadership Development</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-num">5</div>
+        <div class="action-body">
+          <div class="action-title">Activate the mantras — leaders' own words, in front of their teams</div>
+          <div class="action-desc">Part 3 responses are powerful, personal, and diverse. Brian should create a moment — town hall, team meeting, internal publication — where each leader shares their mantra publicly. Culture spreads through authentic human voice, not top-down memos.</div>
+          <div class="action-priority"><span class="pill pill-teal">Now</span> &nbsp; Culture Activation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANTRAS -->
+    <div class="card">
+      <div class="card-title">Leader mantras — Part 3</div>
+      <div style="font-size: 12px; color: var(--text3); margin-bottom: 12px;">Selected standouts from 32 responses. These are their words — not Brian's.</div>
+      <div class="mantra-card">"Standing still is no longer an option. Learn fast, adapt, and turn change into real impact."</div>
+      <div class="mantra-card">"The most valued Technical Center means the most valued people. We invest in people to make our business efficient and innovative."</div>
+      <div class="mantra-card">"Our future looks different than our past. To be competitive, we must embrace change through mindset, upskilling, collaboration, and a willingness to win."</div>
+      <div class="mantra-card">"Innovation and challenge matter because the future will not wait for us — the greatest risk is to stand still. Gradatim Ferociter: step by step, ferociously."</div>
+      <div class="mantra-card">"I will tell my team that every big accomplishment starts with a small step in a different direction — and I will be there to guide them."</div>
+      <div class="mantra-card">"We have studied for over 20 years to work here. What efforts are you making to maintain your job? Building skills is your own responsibility."</div>
+      <div class="mantra-card">"Technology is changing at a rapid pace — if we fail to jump on that speeding locomotive, the train will leave the station and we will be left behind forever."</div>
+      <div class="mantra-card">"I want us to become a team that defines future challenges early and solves them with stronger capability — because that is how we unlock our people's full potential."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: ALL WAVES -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-waves">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Survey Wave History</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">All waves · Longitudinal view</div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="wave-timeline">
+    <div class="wave-node active">
+      <div class="wave-dot"></div>
+      <div class="wave-score">58%</div>
+      <div class="wave-label">Wave 1<br>Jun 2026</div>
+    </div>
+    <div class="wave-node future">
+      <div class="wave-dot"></div>
+      <div class="wave-score">—</div>
+      <div class="wave-label">Wave 2<br>Future</div>
+    </div>
+    <div class="wave-node future">
+      <div class="wave-dot"></div>
+      <div class="wave-score">—</div>
+      <div class="wave-label">Wave 3<br>Future</div>
+    </div>
+    <div class="wave-node future">
+      <div class="wave-dot"></div>
+      <div class="wave-score">—</div>
+      <div class="wave-label">Wave 4<br>Future</div>
+    </div>
+    <div class="wave-node future">
+      <div class="wave-dot"></div>
+      <div class="wave-score">—</div>
+      <div class="wave-label">Wave 5<br>Future</div>
+    </div>
+  </div>
+
+  <!-- WAVE 1 DETAIL -->
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+      <div>
+        <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-bottom: 4px;">WAVE 1 — JUNE 2026</div>
+        <div style="font-family: 'DM Serif Display', serif; font-size: 20px;">Culture Baseline Survey</div>
+      </div>
+      <div style="text-align: right;">
+        <div class="pill pill-green">Complete</div>
+        <div style="font-size: 12px; color: var(--text3); margin-top: 6px;">32 / 32 leaders responded</div>
+      </div>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Finding</th>
+          <th>Tone</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Culture Likes</td>
+          <td>Teamwork, Safety, Ownership — strong foundation acknowledged</td>
+          <td><span class="pill pill-green">Positive</span></td>
+          <td>Reinforce</td>
+        </tr>
+        <tr>
+          <td>Culture Dislikes</td>
+          <td>Speed culture, meeting overload, silo thinking, top-down decisions</td>
+          <td><span class="pill pill-red">Concern</span></td>
+          <td>Address urgently</td>
+        </tr>
+        <tr>
+          <td>Culture Gaps</td>
+          <td>Trust, WHY, empowerment, company pride all critically missing</td>
+          <td><span class="pill pill-amber">Gap</span></td>
+          <td>Build now</td>
+        </tr>
+        <tr>
+          <td>AiO Vision</td>
+          <td>Strategy supported; execution model questioned (tracking ≠ skills)</td>
+          <td><span class="pill pill-amber">Mixed</span></td>
+          <td>Redesign measurement</td>
+        </tr>
+        <tr>
+          <td>Leader Regrets</td>
+          <td>Speed of change, human investment, long-term capability neglected</td>
+          <td><span class="pill pill-red">Concern</span></td>
+          <td>Act before it's regret</td>
+        </tr>
+        <tr>
+          <td>Leader Mantras</td>
+          <td>High quality, authentic, diverse — ready to deploy with teams</td>
+          <td><span class="pill pill-teal">Ready</span></td>
+          <td>Activate now</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FUTURE WAVES -->
+  <div class="grid-3">
+    <div class="upload-zone" onclick="">
+      <div class="upload-icon">◎</div>
+      <div class="upload-title">Wave 2 — Pending</div>
+      <div class="upload-sub">Next survey results will appear here once collected and analyzed</div>
+      <div style="margin-top: 16px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--accent);">+ Add Wave 2 data</div>
+    </div>
+    <div class="upload-zone">
+      <div class="upload-icon">◎</div>
+      <div class="upload-title">Wave 3 — Pending</div>
+      <div class="upload-sub">Progress trends and longitudinal comparison will build here over time</div>
+      <div style="margin-top: 16px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--text3);">Awaiting Wave 2</div>
+    </div>
+    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 12px;">
+      <div style="font-size: 13px; font-weight: 500;">Suggested cadence</div>
+      <div style="font-size: 12px; color: var(--text2); line-height: 1.8;">
+        Wave 2 → <span style="color:var(--accent)">Sept 2026</span><br>
+        Wave 3 → <span style="color:var(--text3)">Dec 2026</span><br>
+        Wave 4 → <span style="color:var(--text3)">Mar 2027</span><br>
+        Wave 5 → <span style="color:var(--text3)">Jun 2027</span><br>
+      </div>
+      <div style="font-size: 11px; color: var(--text3);">Quarterly pulse recommended</div>
+    </div>
+  </div>
+
+  <!-- WHAT TO TRACK NEXT WAVE -->
+  <div class="sec-header">
+    <div class="sec-title" style="font-size:18px;">What to track in Wave 2</div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">New questions to add</div>
+      <div class="insight-block ib-purple">
+        <div class="insight-label">TRACK TRUST PROGRESS</div>
+        <div class="insight-text">"On a scale of 1–5, how much has trust between leadership and teams improved since the last survey?"</div>
+      </div>
+      <div class="insight-block ib-amber">
+        <div class="insight-label">TRACK LEARNING TIME</div>
+        <div class="insight-text">"How many hours per week are you realistically able to dedicate to upskilling right now?"</div>
+      </div>
+      <div class="insight-block ib-green">
+        <div class="insight-label">TRACK MANTRA DEPLOYMENT</div>
+        <div class="insight-text">"Have you shared your personal mantra with your team? What was their reaction?"</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">KPIs to measure over time</div>
+      <div class="theme-item">
+        <div class="theme-name">Culture readiness score</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:58%; background:var(--accent);"></div></div>
+        <div class="theme-count">58%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">WHY clarity score</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:35%; background:var(--amber);"></div></div>
+        <div class="theme-count">35%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Empowerment score</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:40%; background:var(--blue);"></div></div>
+        <div class="theme-count">40%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">AiO confidence score</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:55%; background:var(--teal);"></div></div>
+        <div class="theme-count">55%</div>
+      </div>
+      <div class="theme-item">
+        <div class="theme-name">Leader participation rate</div>
+        <div class="theme-bar-track"><div class="theme-bar-fill" style="width:97%; background:var(--green);"></div></div>
+        <div class="theme-count">97%</div>
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; color: var(--text3);">Target: all scores above 70% by Wave 4 (Mar 2027)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: SURVEY ANALYZER -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-analyzer">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Survey Analyzer</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">Upload any survey export · Auto-analyzes themes, sentiment & key quotes</div>
+  </div>
+
+  <!-- Upload Area -->
+  <div id="uploadArea">
+    <div id="dropZone" class="upload-zone" onclick="document.getElementById('surveyFile').click()" style="padding:3.5rem 2rem;">
+      <div style="font-size:48px; margin-bottom:16px;">📊</div>
+      <div class="upload-title" style="font-size:20px; margin-bottom:8px;">Drop your survey file here</div>
+      <div class="upload-sub" style="margin-bottom:24px;">CSV or Excel (.xlsx / .xls) · First row = column headers / question titles</div>
+      <div style="background:var(--accent); color:white; display:inline-block; padding:10px 28px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer;">Browse File</div>
+    </div>
+    <input type="file" id="surveyFile" accept=".csv,.xlsx,.xls" style="display:none;">
+    <div style="display:flex; justify-content:center; gap:24px; margin-top:20px; flex-wrap:wrap;">
+      <span style="font-size:12px; color:var(--text3);">✓ Google Forms export</span>
+      <span style="font-size:12px; color:var(--text3);">✓ SurveyMonkey CSV</span>
+      <span style="font-size:12px; color:var(--text3);">✓ Typeform results</span>
+      <span style="font-size:12px; color:var(--text3);">✓ Any CSV / Excel table</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingState" style="display:none; text-align:center; padding:4rem 2rem;">
+    <div style="font-family:'DM Serif Display',serif; font-size:26px; margin-bottom:10px;">Analyzing responses...</div>
+    <div style="font-size:13px; color:var(--text3);">Detecting themes · Scoring sentiment · Extracting key quotes</div>
+  </div>
+
+  <!-- Results injected here -->
+  <div id="surveyResults"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: SECTION B FILES -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-sectionb">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Section B — MD Data Files</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">MD_Workshop_Q2_2026 · Homework Workbook · Page 4</div>
+  </div>
+
+  <!-- Deadline Banner -->
+  <div style="background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: var(--radius); padding: 16px 24px; margin-bottom: 10px; text-align: center;">
+    <div style="font-weight: 700; color: #78350f; font-size: 15px;">Request both files from Jenna by Wednesday 10 June 2026.</div>
+  </div>
+  <div style="font-size: 13px; color: var(--text3); margin-bottom: 28px; text-align: center; font-style: italic;">Ask Jenna for these two consolidated files before you start Section B</div>
+
+  <!-- File 1 -->
+  <div class="card" style="margin-bottom: 14px; border-left: 4px solid #1d4ed8;">
+    <div style="display: flex; gap: 20px; align-items: flex-start;">
+      <div style="width: 52px; height: 52px; min-width:52px; background: #1e3a8a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 28px; color: white;">1</div>
+      <div style="flex: 1;">
+        <div style="color: #60a5fa; font-weight: 600; font-size: 15px; margin-bottom: 8px;">Division Leader feedback, grouped per Functional Leader</div>
+        <div style="font-size: 13px; color: var(--text2); margin-bottom: 18px; line-height: 1.75;">One file per MD showing the consolidated feedback from THEIR Division Leaders only. Use this to see what your own DLs are saying about your function.</div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <button onclick="downloadFile1()" style="background: #1e3a8a; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1e3a8a'">⬇ Download DL Feedback Template</button>
+          <span style="font-size: 12px; color: var(--text3);">CSV · 30 responses · Includes MD assignment column</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File 2 -->
+  <div class="card" style="margin-bottom: 28px; border-left: 4px solid #1d4ed8;">
+    <div style="display: flex; gap: 20px; align-items: flex-start;">
+      <div style="width: 52px; height: 52px; min-width:52px; background: #1e3a8a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 28px; color: white;">2</div>
+      <div style="flex: 1;">
+        <div style="color: #60a5fa; font-weight: 600; font-size: 15px; margin-bottom: 8px;">All Functional Leader feedback, in a separate combined file</div>
+        <div style="font-size: 13px; color: var(--text2); margin-bottom: 18px; line-height: 1.75;">One file consolidating responses from all Functional Leaders (MDs). Use this to compare your view against your MD peers.</div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <button onclick="downloadFile2()" style="background: #1e3a8a; color: white; border: none; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; transition: background 0.2s;" onmouseover="this.style.background='#1e40af'" onmouseout="this.style.background='#1e3a8a'">⬇ Download All FL Responses</button>
+          <span style="font-size: 12px; color: var(--text3);">CSV · 30 respondents · Parts 1–3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What's included -->
+  <div class="sec-header">
+    <div class="sec-title" style="font-size:18px;">Data included in both files</div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="grid-3" style="margin-bottom: 20px;">
+    <div class="card">
+      <div class="card-title">Part 1 · Culture Snapshot</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 2;">
+        <div>Q1 — What do you <span style="color:var(--green); font-weight:600;">LIKE</span>?</div>
+        <div>Q2 — What do you <span style="color:var(--red); font-weight:600;">DISLIKE</span>?</div>
+        <div>Q3 — What is <span style="color:var(--blue); font-weight:600;">MISSING</span>?</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Part 2 · Personal Reflections</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 2;">
+        <div>Subject 1 — AiO success vision</div>
+        <div>Subject 2 — 2036 time-travel</div>
+        <div>Leadership regrets & blockers</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Part 3 · Leader Mantras</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 2;">
+        <div>Personal statement on upskilling</div>
+        <div>AiO & innovation belief</div>
+        <div>Words to share with their teams</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-block ib-amber">
+    <div class="insight-label">NOTE — File 1 MD Assignment Required</div>
+    <div class="insight-text">The template (File 1) includes a blank "Functional Leader (MD)" column. Responses are currently anonymous — coordinate with the MD team to assign each respondent to the correct Functional Leader before distributing individual MD copies.</div>
+  </div>
+
+</div>
+
+</div><!-- /wrapper -->
+
+<div class="footer">
+  TCK Culture Pulse Dashboard &nbsp;·&nbsp; Wave 1 Baseline &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Confidential — For Brian & Senior Leadership Only
+</div>
+
+<script>
+// ═══════════════════════════ SURVEY ANALYZER ENGINE ═══════════════════════════
+
+const _STOP = new Set(['the','a','an','and','or','but','is','are','was','were','be','been',
+'have','has','had','do','does','did','will','would','could','should','may','might','must',
+'can','to','of','in','on','at','by','for','with','about','into','through','from','up',
+'down','out','this','that','these','those','it','its','we','our','they','their','you',
+'your','i','my','he','his','she','her','us','them','who','which','what','if','also','even',
+'still','much','well','back','need','make','like','think','people','work','time','way','get',
+'one','two','want','go','see','know','just','more','very','so','all','not','than','then',
+'when','where','how','each','few','some','no','any','both','same','too','been','than','other',
+'new','now','here','there','each','such','only','own','per','its','here','their','them']);
+
+const _THEMES = [
+  { label:'Trust & Transparency',    kw:['trust','honest','transparent','transparency','clarity','open','sincere','credible'] },
+  { label:'Leadership',              kw:['leader','leadership','manage','management','direction','vision','guide','mentor'] },
+  { label:'Communication',           kw:['communication','communicate','share','inform','message','voice','speak','dialogue','feedback'] },
+  { label:'Teamwork & Collaboration',kw:['team','collaboration','collaborate','together','cooperate','partner','collective','cross-functional','cross'] },
+  { label:'Innovation & Technology', kw:['innovation','innovate','technology','ai','digital','creative','transform','evolve','future','tool'] },
+  { label:'Growth & Upskilling',     kw:['grow','growth','learn','learning','upskill','reskill','develop','skill','capability','aio','training','study'] },
+  { label:'Speed & Agility',         kw:['fast','speed','quick','agile','agility','efficient','efficiency','flexible','flexibility','adapt','urgent'] },
+  { label:'Empowerment & Ownership', kw:['empower','empowerment','autonomy','ownership','responsible','accountability','freedom','initiative','ownership'] },
+  { label:'Safety',                  kw:['safety','safe','risk','protect','secure','hazard'] },
+  { label:'Culture & Values',        kw:['culture','value','mindset','behavior','attitude','respect','pride','diversity','ethics'] },
+  { label:'Process & Bureaucracy',   kw:['process','procedure','approval','policy','rule','meeting','bureaucracy','hierarchy','overload','silo'] },
+  { label:'Recognition & Career',    kw:['recognition','career','promotion','reward','incentive','title','seniority','salary','bonus'] }
+];
+
+const _POS = ['good','great','strong','proud','success','positive','effective','efficient',
+'appreciate','enjoy','support','better','best','improve','trust','open','collaborative',
+'flexible','empower','commit','dedicate','passion','respect','care','excellent','grow',
+'clear','thrive','win','motivate','inspire','confident','opportunity','achieve','lead'];
+
+const _NEG = ['bad','poor','lack','missing','not enough','fail','difficult','problem','issue',
+'concern','fear','worry','slow','stuck','resist','avoid','silo','overload','unclear',
+'confusion','frustration','limit','barrier','gap','complain','rigid','top-down','bureaucracy',
+'weak','hesitate','ignore','push','micromanage','disconnect','disengaged','unfair','too many'];
+
+function _parseSurveyCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const rows = []; let row = [], field = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], n = text[i+1];
+    if (inQ) {
+      if (c==='"'&&n==='"') { field+='"'; i++; }
+      else if (c==='"') inQ = false;
+      else field += c;
+    } else {
+      if (c==='"') inQ = true;
+      else if (c===',') { row.push(field); field=''; }
+      else if (c==='\n'||(c==='\r'&&n==='\n')) {
+        if(c==='\r') i++;
+        row.push(field); field='';
+        if (row.some(f=>f.trim())) rows.push(row);
+        row=[];
+      } else field += c;
+    }
+  }
+  if(field||row.length){ row.push(field); if(row.some(f=>f.trim())) rows.push(row); }
+  return rows;
+}
+
+function _getColType(vals) {
+  const ne = vals.filter(v=>v!==null&&v!==undefined&&String(v).trim().length>0);
+  if (!ne.length) return 'empty';
+  const nums = ne.filter(v=>!isNaN(parseFloat(v))&&isFinite(v));
+  if (nums.length/ne.length > 0.85) return 'numeric';
+  const avg = ne.reduce((s,v)=>s+String(v).length,0)/ne.length;
+  const uniq = new Set(ne.map(v=>String(v).toLowerCase().trim())).size;
+  if (uniq<=8 && avg<30) return 'categorical';
+  return 'text';
+}
+
+function _analyzeText(vals) {
+  const ne = vals.filter(v=>v&&String(v).trim().length>2).map(v=>String(v).trim());
+  if (!ne.length) return null;
+
+  const wf={};
+  ne.forEach(v=>{
+    v.toLowerCase().split(/[\s,;:.!?()\-\/\"\']+/).forEach(w=>{
+      if(w.length>3&&!_STOP.has(w)) wf[w]=(wf[w]||0)+1;
+    });
+  });
+  const topWords = Object.entries(wf).sort((a,b)=>b[1]-a[1]).slice(0,14);
+
+  const themes = _THEMES.map(t=>({
+    label: t.label,
+    count: ne.filter(v=>t.kw.some(k=>v.toLowerCase().includes(k))).length
+  })).filter(t=>t.count>0)
+    .map(t=>({...t, pct:Math.round(t.count/ne.length*100)}))
+    .sort((a,b)=>b.count-a.count).slice(0,6);
+
+  let pos=0,neg=0,neu=0;
+  ne.forEach(v=>{
+    const l=v.toLowerCase();
+    const p=_POS.filter(w=>l.includes(w)).length;
+    const n=_NEG.filter(w=>l.includes(w)).length;
+    if(p>n) pos++; else if(n>p) neg++; else neu++;
+  });
+
+  const quotes = ne.filter(v=>v.length>40).sort((a,b)=>b.length-a.length).slice(0,5);
+  return { count:ne.length, topWords, themes, sentiment:{positive:pos,negative:neg,neutral:neu}, quotes };
+}
+
+function _analyzeCategorical(vals) {
+  const freq={};
+  vals.filter(v=>v&&String(v).trim()).forEach(v=>{ const k=String(v).trim(); freq[k]=(freq[k]||0)+1; });
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+}
+
+function _analyzeNumeric(vals) {
+  const nums=vals.map(parseFloat).filter(v=>!isNaN(v));
+  if(!nums.length) return null;
+  const avg=nums.reduce((s,v)=>s+v,0)/nums.length;
+  const freq={};
+  nums.forEach(v=>{ const k=Math.round(v); freq[k]=(freq[k]||0)+1; });
+  return { count:nums.length, avg:avg.toFixed(2), min:Math.min(...nums), max:Math.max(...nums), freq:Object.entries(freq).sort((a,b)=>Number(a[0])-Number(b[0])) };
+}
+
+let _surveyCharts = {};
+function _destroyCharts() { Object.values(_surveyCharts).forEach(c=>c.destroy()); _surveyCharts={}; }
+
+function _renderAnalysis(headers, rows, filename) {
+  _destroyCharts();
+  const gc='rgba(255,255,255,0.06)', tc='#9090a8';
+  const colData = headers.map((h,i)=>({ header:h, type:_getColType(rows.map(r=>r[i])), vals:rows.map(r=>r[i]) }));
+  const textQCount = colData.filter(c=>c.type==='text').length;
+  const totalResp = rows.length;
+  let chartQueue = [];
+  let cIdx = 0;
+
+  // Hero summary
+  let html = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2rem;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;">${filename}</div>
+        <div style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px;">${headers.length} questions · ${totalResp} respondents</div>
+      </div>
+      <button onclick="_resetUploader()" style="background:var(--card2);border:0.5px solid var(--border2);color:var(--text2);padding:8px 18px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;">↩ Upload New File</button>
+    </div>
+    <div style="height:0.5px;background:var(--border);margin-bottom:1.5rem;"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;">
+      <div class="hero-card accent-purple"><div class="hero-label">Respondents</div><div class="hero-value">${totalResp}</div></div>
+      <div class="hero-card accent-green"><div class="hero-label">Total Questions</div><div class="hero-value">${headers.length}</div></div>
+      <div class="hero-card accent-amber"><div class="hero-label">Open-text Q's</div><div class="hero-value">${textQCount}</div></div>
+      <div class="hero-card accent-red"><div class="hero-label">Structured Q's</div><div class="hero-value">${colData.filter(c=>c.type==='categorical'||c.type==='numeric').length}</div></div>
+    </div>
+  `;
+
+  // Per-question cards
+  colData.forEach((col, qi) => {
+    if (col.type==='empty') return;
+    const qLabel = 'Q'+(qi+1);
+
+    if (col.type==='text') {
+      const a = _analyzeText(col.vals);
+      if (!a) return;
+      const t=a.count, posP=Math.round(a.sentiment.positive/t*100), negP=Math.round(a.sentiment.negative/t*100), neuP=100-posP-negP;
+      const cid='_sc'+cIdx++;
+      chartQueue.push({ id:cid, kind:'donut', data:[a.sentiment.positive,a.sentiment.negative,a.sentiment.neutral], labels:['Positive','Concern','Neutral'], colors:['#22c55e','#ef4444','#3b82f6'] });
+
+      html += `
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+            <div style="flex:1;">
+              <span class="pill pill-purple" style="display:inline-block;margin-bottom:8px;">${qLabel} · Open Text</span>
+              <div style="font-size:15px;font-weight:500;line-height:1.5;max-width:680px;">${col.header}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-family:'DM Serif Display',serif;font-size:32px;">${t}</div>
+              <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">responses</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.9fr 1.1fr;gap:14px;">
+
+            <div>
+              <div class="card-title">Key Themes</div>
+              ${a.themes.length ? a.themes.map(th=>`
+                <div class="theme-item">
+                  <div class="theme-name" style="font-size:11px;width:155px;">${th.label}</div>
+                  <div class="theme-bar-track"><div class="theme-bar-fill" style="width:${th.pct}%;background:var(--accent);"></div></div>
+                  <div class="theme-count">${th.pct}%</div>
+                </div>`).join('') : '<div style="font-size:12px;color:var(--text3);padding:8px 0;">No dominant themes detected</div>'}
+              <div style="margin-top:14px;">
+                <div class="card-title">Frequent Words</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  ${a.topWords.slice(0,10).map(([w,c])=>`<span class="pill pill-purple" style="font-size:10px;">${w} <span style="opacity:0.55">${c}</span></span>`).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="card-title">Sentiment</div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+                <div style="background:rgba(34,197,94,0.1);border:0.5px solid rgba(34,197,94,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:12px;color:var(--text2);">Positive</span>
+                  <span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--green);">${posP}%</span>
+                </div>
+                <div style="background:rgba(239,68,68,0.1);border:0.5px solid rgba(239,68,68,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:12px;color:var(--text2);">Concern</span>
+                  <span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--red);">${negP}%</span>
+                </div>
+                <div style="background:rgba(90,90,114,0.08);border:0.5px solid rgba(90,90,114,0.15);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:12px;color:var(--text2);">Neutral</span>
+                  <span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text2);">${neuP}%</span>
+                </div>
+              </div>
+              <div class="chart-wrap" style="height:120px;"><canvas id="${cid}"></canvas></div>
+            </div>
+
+            <div>
+              <div class="card-title">Notable Responses</div>
+              <div class="quote-list">
+                ${a.quotes.slice(0,4).map(q=>`
+                  <div class="quote-item q-purple" style="font-size:12px;">"${q.length>160?q.slice(0,160)+'…':q}"</div>
+                `).join('')}
+              </div>
+            </div>
+
+          </div>
+        </div>`;
+    }
+
+    else if (col.type==='categorical') {
+      const freq = _analyzeCategorical(col.vals);
+      const total = freq.reduce((s,[,c])=>s+c,0);
+      const cid='_sc'+cIdx++;
+      const palette=['#7c6aff','#22c55e','#ef4444','#f59e0b','#14b8a6','#3b82f6','#ec4899','#8b5cf6'];
+      chartQueue.push({ id:cid, kind:'donut', data:freq.map(([,c])=>c), labels:freq.map(([k])=>k), colors:palette });
+
+      html += `
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+            <div style="flex:1;">
+              <span class="pill pill-teal" style="display:inline-block;margin-bottom:8px;">${qLabel} · Multiple Choice</span>
+              <div style="font-size:15px;font-weight:500;line-height:1.5;max-width:680px;">${col.header}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-family:'DM Serif Display',serif;font-size:32px;">${total}</div>
+              <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">responses</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;">
+            <div>
+              ${freq.map(([k,c],i)=>`
+                <div class="theme-item">
+                  <div class="theme-name" style="font-size:12px;width:160px;">${k}</div>
+                  <div class="theme-bar-track"><div class="theme-bar-fill" style="width:${Math.round(c/total*100)}%;background:${palette[i%palette.length]};"></div></div>
+                  <div class="theme-count">${Math.round(c/total*100)}%</div>
+                </div>`).join('')}
+            </div>
+            <div class="chart-wrap" style="height:200px;"><canvas id="${cid}"></canvas></div>
+          </div>
+        </div>`;
+    }
+
+    else if (col.type==='numeric') {
+      const a = _analyzeNumeric(col.vals);
+      if (!a) return;
+      const cid='_sc'+cIdx++;
+      chartQueue.push({ id:cid, kind:'bar', data:a.freq.map(([,c])=>c), labels:a.freq.map(([k])=>k) });
+
+      html += `
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+            <div style="flex:1;">
+              <span class="pill pill-amber" style="display:inline-block;margin-bottom:8px;">${qLabel} · Scale / Number</span>
+              <div style="font-size:15px;font-weight:500;line-height:1.5;max-width:680px;">${col.header}</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Average</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.avg}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Min</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.min}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Max</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.max}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Responses</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.count}</div></div>
+          </div>
+          <div class="chart-wrap" style="height:150px;"><canvas id="${cid}"></canvas></div>
+        </div>`;
+    }
+  });
+
+  // Inject HTML
+  const out = document.getElementById('surveyResults');
+  out.innerHTML = html;
+  out.style.display = 'block';
+  document.getElementById('loadingState').style.display = 'none';
+
+  // Render charts after DOM update
+  requestAnimationFrame(()=>{
+    chartQueue.forEach(q=>{
+      const canvas = document.getElementById(q.id);
+      if (!canvas) return;
+      if (q.kind==='donut') {
+        _surveyCharts[q.id] = new Chart(canvas, {
+          type:'doughnut',
+          data:{ labels:q.labels, datasets:[{ data:q.data, backgroundColor:q.colors, borderWidth:0, spacing:3 }] },
+          options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+            plugins:{ legend:{ display:true, position:'right', labels:{ color:tc, font:{size:10}, boxWidth:10, padding:6 } } } }
+        });
+      } else {
+        _surveyCharts[q.id] = new Chart(canvas, {
+          type:'bar',
+          data:{ labels:q.labels, datasets:[{ data:q.data, backgroundColor:'#7c6aff', borderRadius:4 }] },
+          options:{ responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ x:{ grid:{color:gc}, ticks:{color:tc,font:{size:10}} }, y:{ grid:{color:gc}, ticks:{color:tc,font:{size:10}} } } }
+        });
+      }
+    });
+  });
+}
+
+// ─── METADATA FILTER ──────────────────────────────────────────────
+const _META_RE = /^(id|no|번호|순번|#|respondent[\s_-]?id|response[\s_-]?id|설문[\s_]?id|uuid|row|collector[\s_-]?id|custom[\s_]?data)$/i;
+const _TIME_RE = /(시작[\s_]?시간|완료[\s_]?시간|타임스탬프|time|timestamp|date|완료|시작|종료|submitted|recorded|duration|start\s*time|end\s*time|completion)/i;
+const _MAIL_RE = /(email|이메일|메일|e-mail)/i;
+const _NAME_RE = /^(name|이름|성명|성함|username|respondent\s*name|ip[\s_]?address)$/i;
+
+function _isMetaColumn(header, vals) {
+  const h = header.toLowerCase().trim();
+  if (_META_RE.test(h) || _TIME_RE.test(h) || _MAIL_RE.test(h) || _NAME_RE.test(h)) return true;
+  const ne = vals.filter(v => v && String(v).trim().length > 0);
+  if (!ne.length) return false;
+  if (ne.filter(v => /\S+@\S+\.\S+/.test(String(v))).length / ne.length > 0.5) return true;
+  if (ne.filter(v => /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/.test(String(v))).length / ne.length > 0.5) return true;
+  const nums = ne.map(v => parseFloat(v)).filter(v => !isNaN(v));
+  if (nums.length / ne.length > 0.9 && nums.length > 3) {
+    const s = [...nums].sort((a, b) => a - b);
+    if (s[s.length-1] - s[0] === s.length - 1) return true;
+  }
+  return false;
+}
+
+// ─── NEW ENTRY POINT — filters metadata → runs analysis → calls _renderCards ─
+function _processAndRender(headers, rows, filename) {
+  const columns = [];
+  headers.forEach((h, i) => {
+    const vals = rows.map(r => r[i]);
+    if (_isMetaColumn(h, vals)) return;
+    const type = _getColType(vals);
+    if (type === 'empty') return;
+    if (type === 'text') {
+      const analysis = _analyzeText(vals);
+      if (analysis) columns.push({ header: h, type: 'text', analysis });
+    } else if (type === 'categorical') {
+      const freq = _analyzeCategorical(vals);
+      columns.push({ header: h, type: 'categorical', total: freq.reduce((s,[,c])=>s+c,0), freq });
+    } else if (type === 'numeric') {
+      const numAnalysis = _analyzeNumeric(vals);
+      if (numAnalysis) columns.push({ header: h, type: 'numeric', numAnalysis });
+    }
+  });
+  window._currentSurveyData = { filename, respondentCount: rows.length, columns };
+  _renderCards(columns, filename, rows.length, null);
+}
+
+// ─── CARD RENDERER — used for both fresh analysis and saved surveys ─────────
+function _renderCards(columns, filename, totalResp, existingSurveyId) {
+  _destroyCharts();
+  const gc = 'rgba(255,255,255,0.06)', tc = '#9090a8';
+  let chartQueue = [], cIdx = 0;
+  const isLoaded = existingSurveyId != null;
+
+  let html = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2rem;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:24px;">${filename}</div>
+        <div style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px;">${columns.length} questions · ${totalResp} respondents</div>
+      </div>
+      <button onclick="_resetUploader()" style="background:var(--card2);border:0.5px solid var(--border2);color:var(--text2);padding:8px 18px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;">↩ Upload New File</button>
+    </div>
+    <div style="height:0.5px;background:var(--border);margin-bottom:1rem;"></div>
+    ${isLoaded ? `
+      <div style="background:rgba(34,197,94,0.06);border:0.5px solid rgba(34,197,94,0.2);border-radius:var(--radius);padding:10px 18px;margin-bottom:14px;font-size:12px;color:var(--green);">
+        ✓ Loaded from saved surveys
+      </div>` : `
+      <div class="survey-save-bar">
+        <span style="font-size:12px;color:var(--text3);white-space:nowrap;">Save as:</span>
+        <input id="_surveyNameInput" class="survey-name-input" value="${filename.replace(/\.(csv|xlsx|xls)$/i,'')}">
+        <button id="_saveSurveyBtn" class="btn-save" onclick="_saveSurvey()">💾 Save Survey</button>
+      </div>`}
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;">
+      <div class="hero-card accent-purple"><div class="hero-label">Respondents</div><div class="hero-value">${totalResp}</div></div>
+      <div class="hero-card accent-green"><div class="hero-label">Questions</div><div class="hero-value">${columns.length}</div></div>
+      <div class="hero-card accent-amber"><div class="hero-label">Open-text</div><div class="hero-value">${columns.filter(c=>c.type==='text').length}</div></div>
+      <div class="hero-card accent-red"><div class="hero-label">Structured</div><div class="hero-value">${columns.filter(c=>c.type!=='text').length}</div></div>
+    </div>`;
+
+  // ── Executive summary (auto-generated for live analysis view) ────────
+  const _txCols = columns.filter(c => c.type === 'text' && c.analysis);
+  if (_txCols.length > 0) {
+    const _thAgg = {};
+    _txCols.forEach(c => c.analysis.themes.forEach(t => { _thAgg[t.label] = (_thAgg[t.label]||0)+t.count; }));
+    const _topThm = Object.entries(_thAgg).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const _maxCnt = _topThm[0]?.[1]||1;
+    let _tP=0,_tN=0; const _tAll = _txCols.reduce((s,c)=>s+c.analysis.count,0)||1;
+    _txCols.forEach(c => { _tP+=c.analysis.sentiment.positive; _tN+=c.analysis.sentiment.negative; });
+    const _oPosP=Math.round(_tP/_tAll*100), _oNegP=Math.round(_tN/_tAll*100);
+    const _t1=_topThm[0]?.[0], _t2=_topThm[1]?.[0];
+    const _story = _t1
+      ? `Responses cluster around <strong>${_t1}</strong>${_t2?` and <strong>${_t2}</strong>`:''} — with <strong>${_oPosP}%</strong> positive sentiment and <strong>${_oNegP}%</strong> highlighting areas of concern.`
+      : `Survey completed with ${totalResp} respondents across ${columns.length} questions.`;
+    html += `
+      <div style="background:linear-gradient(135deg,rgba(124,106,255,0.1),rgba(168,85,247,0.05));border:0.5px solid rgba(124,106,255,0.25);border-radius:var(--radius-lg);padding:1.5rem 2rem;margin-bottom:2rem;">
+        <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent);letter-spacing:0.08em;margin-bottom:8px;">THE STORY IN ONE LINE</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);line-height:1.5;">${_story}</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:2rem;">
+        <div class="card">
+          <div class="card-title">Dominant Themes Across All Questions</div>
+          ${_topThm.map(([label,count])=>`<div class="theme-item"><div class="theme-name" style="font-size:12px;width:170px;">${label}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${Math.round(count/_maxCnt*100)}%;background:var(--accent);"></div></div><div class="theme-count">${count}</div></div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="card-title">Sentiment by Question</div>
+          ${_txCols.map(c => {
+            const a=c.analysis, t=a.count||1;
+            const p=Math.round(a.sentiment.positive/t*100), n=Math.round(a.sentiment.negative/t*100);
+            const qi=columns.indexOf(c);
+            return `<div style="margin-bottom:10px;">
+              <div style="font-size:11px;color:var(--text3);margin-bottom:3px;">Q${qi+1}: ${c.header.slice(0,55)}${c.header.length>55?'…':''}</div>
+              <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:1px;">
+                <div style="width:${p}%;background:var(--green);min-width:${p>0?2:0}px;border-radius:4px 0 0 4px;"></div>
+                <div style="width:${n}%;background:var(--red);min-width:${n>0?2:0}px;"></div>
+                <div style="flex:1;background:var(--bg3);border-radius:0 4px 4px 0;"></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:3px;">
+                <span style="font-size:10px;color:var(--green);">✓ ${p}%</span>
+                <span style="font-size:10px;color:var(--red);">⚠ ${n}%</span>
+                <span style="font-size:10px;color:var(--text3);">— ${100-p-n}%</span>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="sec-header">
+        <div class="sec-title" style="font-size:18px;">Question-by-Question Analysis</div>
+        <div class="sec-line"></div>
+      </div>`;
+  }
+
+  columns.forEach((col, qi) => {
+    const qLabel = 'Q' + (qi+1);
+    const delBtn = `<button class="card-delete-btn" onclick="this.closest('.survey-card').remove()" title="Remove section">×</button>`;
+
+    if (col.type === 'text') {
+      const a = col.analysis; if (!a) return;
+      const t = a.count, posP = Math.round(a.sentiment.positive/t*100), negP = Math.round(a.sentiment.negative/t*100), neuP = 100-posP-negP;
+      const cid = '_sc'+cIdx++;
+      chartQueue.push({ id:cid, kind:'donut', data:[a.sentiment.positive,a.sentiment.negative,a.sentiment.neutral], labels:['Positive','Concern','Neutral'], colors:['#22c55e','#ef4444','#3b82f6'] });
+      html += `
+        <div class="card survey-card" style="margin-bottom:16px;">${delBtn}
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;padding-right:36px;">
+            <div style="flex:1;"><span class="pill pill-purple" style="display:inline-block;margin-bottom:8px;">${qLabel} · Open Text</span>
+              <div style="font-size:15px;font-weight:500;line-height:1.5;">${col.header}</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-family:'DM Serif Display',serif;font-size:32px;">${t}</div>
+              <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">responses</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.9fr 1.1fr;gap:14px;">
+            <div><div class="card-title">Key Themes</div>
+              ${a.themes.length ? a.themes.map(th=>`<div class="theme-item"><div class="theme-name" style="font-size:11px;width:155px;">${th.label}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${th.pct}%;background:var(--accent);"></div></div><div class="theme-count">${th.pct}%</div></div>`).join('') : '<div style="font-size:12px;color:var(--text3);padding:8px 0;">No dominant themes detected</div>'}
+              <div style="margin-top:14px;"><div class="card-title">Frequent Words</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${a.topWords.slice(0,10).map(([w,c])=>`<span class="pill pill-purple" style="font-size:10px;">${w} <span style="opacity:0.55">${c}</span></span>`).join('')}</div></div>
+            </div>
+            <div><div class="card-title">Sentiment</div>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+                <div style="background:rgba(34,197,94,0.1);border:0.5px solid rgba(34,197,94,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Positive</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--green);">${posP}%</span></div>
+                <div style="background:rgba(239,68,68,0.1);border:0.5px solid rgba(239,68,68,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Concern</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--red);">${negP}%</span></div>
+                <div style="background:rgba(90,90,114,0.08);border:0.5px solid rgba(90,90,114,0.15);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Neutral</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text2);">${neuP}%</span></div>
+              </div>
+              <div class="chart-wrap" style="height:120px;"><canvas id="${cid}"></canvas></div>
+            </div>
+            <div><div class="card-title">Notable Responses</div><div class="quote-list">${a.quotes.slice(0,4).map(q=>`<div class="quote-item q-purple" style="font-size:12px;">"${q.length>160?q.slice(0,160)+'…':q}"</div>`).join('')}</div></div>
+          </div>
+        </div>`;
+
+    } else if (col.type === 'categorical') {
+      const { freq, total } = col;
+      const cid = '_sc'+cIdx++;
+      const pal = ['#7c6aff','#22c55e','#ef4444','#f59e0b','#14b8a6','#3b82f6','#ec4899','#8b5cf6'];
+      chartQueue.push({ id:cid, kind:'donut', data:freq.map(([,c])=>c), labels:freq.map(([k])=>k), colors:pal });
+      html += `
+        <div class="card survey-card" style="margin-bottom:16px;">${delBtn}
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;padding-right:36px;">
+            <div style="flex:1;"><span class="pill pill-teal" style="display:inline-block;margin-bottom:8px;">${qLabel} · Multiple Choice</span>
+              <div style="font-size:15px;font-weight:500;line-height:1.5;">${col.header}</div></div>
+            <div style="text-align:right;flex-shrink:0;"><div style="font-family:'DM Serif Display',serif;font-size:32px;">${total}</div>
+              <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">responses</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;">
+            <div>${freq.map(([k,c],i)=>`<div class="theme-item"><div class="theme-name" style="font-size:12px;width:160px;">${k}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${Math.round(c/total*100)}%;background:${pal[i%pal.length]};"></div></div><div class="theme-count">${Math.round(c/total*100)}%</div></div>`).join('')}</div>
+            <div class="chart-wrap" style="height:200px;"><canvas id="${cid}"></canvas></div>
+          </div>
+        </div>`;
+
+    } else if (col.type === 'numeric') {
+      const a = col.numAnalysis; if (!a) return;
+      const cid = '_sc'+cIdx++;
+      chartQueue.push({ id:cid, kind:'bar', data:a.freq.map(([,c])=>c), labels:a.freq.map(([k])=>k) });
+      html += `
+        <div class="card survey-card" style="margin-bottom:16px;">${delBtn}
+          <div style="padding-right:36px;margin-bottom:16px;"><span class="pill pill-amber" style="display:inline-block;margin-bottom:8px;">${qLabel} · Scale / Number</span>
+            <div style="font-size:15px;font-weight:500;line-height:1.5;">${col.header}</div></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Average</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.avg}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Min</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.min}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Max</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.max}</div></div>
+            <div class="card" style="padding:14px;text-align:center;"><div class="hero-label">Responses</div><div style="font-family:'DM Serif Display',serif;font-size:26px;margin-top:4px;">${a.count}</div></div>
+          </div>
+          <div class="chart-wrap" style="height:150px;"><canvas id="${cid}"></canvas></div>
+        </div>`;
+    }
+  });
+
+  const out = document.getElementById('surveyResults');
+  out.innerHTML = html; out.style.display = 'block';
+  document.getElementById('uploadArea').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'none';
+
+  requestAnimationFrame(() => {
+    chartQueue.forEach(q => {
+      const cv = document.getElementById(q.id); if (!cv) return;
+      if (q.kind === 'donut') {
+        _surveyCharts[q.id] = new Chart(cv, { type:'doughnut', data:{ labels:q.labels, datasets:[{ data:q.data, backgroundColor:q.colors, borderWidth:0, spacing:3 }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{ display:true, position:'right', labels:{ color:tc, font:{size:10}, boxWidth:10, padding:6 } } } } });
+      } else {
+        _surveyCharts[q.id] = new Chart(cv, { type:'bar', data:{ labels:q.labels, datasets:[{ data:q.data, backgroundColor:'#7c6aff', borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ grid:{color:gc}, ticks:{color:tc,font:{size:10}} }, y:{ grid:{color:gc}, ticks:{color:tc,font:{size:10}} } } } });
+      }
+    });
+  });
+}
+
+// ─── SAVE / LOAD / MENU ───────────────────────────────────────────────
+window._currentSurveyData = null;
+
+function _saveSurvey() {
+  const input = document.getElementById('_surveyNameInput');
+  const name = (input && input.value.trim()) || 'Untitled Survey';
+  if (!window._currentSurveyData) return;
+  const toSave = { ...window._currentSurveyData, name, id: Date.now(), savedAt: new Date().toISOString() };
+  const all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
+  all.unshift(toSave);
+  localStorage.setItem('_tckSurveys', JSON.stringify(all));
+  const btn = document.getElementById('_saveSurveyBtn');
+  if (btn) { btn.textContent = '✓ Saved!'; btn.classList.add('saved'); setTimeout(() => { btn.textContent = '💾 Save Survey'; btn.classList.remove('saved'); }, 2000); }
+  _updateSurveyMenu();
+}
+
+function _deleteSurveyAndNav(id) {
+  if (!confirm('Delete this survey?')) return;
+  const all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
+  localStorage.setItem('_tckSurveys', JSON.stringify(all.filter(s => s.id !== id)));
+  _updateSurveyMenu();
+  showPage('overview');
+}
+
+function _updateSurveyMenu() {
+  document.querySelectorAll('.dyn-survey-page').forEach(p => p.remove());
+  const all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
+  if (!all.length) return;
+  const wrapper = document.querySelector('.wrapper');
+  all.forEach(survey => {
+    const page = document.createElement('div');
+    page.className = 'page dyn-survey-page';
+    page.id = 'page-sv-' + survey.id;
+    page.innerHTML = _buildSurveyPageHTML(survey);
+    wrapper.appendChild(page);
+  });
+}
+
+const _PICKER_COLORS = ['#7c6aff','#22c55e','#f59e0b','#14b8a6','#ec4899','#3b82f6','#a855f7'];
+
+function _toggleSurveyPicker(e) {
+  e.stopPropagation();
+  const picker = document.getElementById('surveyPicker');
+  const isOpen = picker.classList.contains('open');
+  picker.classList.toggle('open', !isOpen);
+  document.querySelector('.picker-arrow').style.transform = isOpen ? '' : 'rotate(180deg)';
+  if (!isOpen) _populateSurveyPicker();
+}
+
+document.addEventListener('click', () => {
+  const picker = document.getElementById('surveyPicker');
+  if (picker && picker.classList.contains('open')) {
+    picker.classList.remove('open');
+    const arrow = document.querySelector('.picker-arrow');
+    if (arrow) arrow.style.transform = '';
+  }
+});
+
+function _populateSurveyPicker() {
+  const all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
+  const currentPage = document.getElementById('topbarTitle')?.dataset?.page || 'overview';
+  const tckActive = ['overview','part1','part2','actions','waves','analyzer','sectionb'].includes(currentPage);
+
+  let html = `<div class="survey-picker-header">Switch Survey</div>
+    <div class="survey-picker-item ${tckActive ? 'picker-active' : ''}" onclick="_pickSurvey('overview')">
+      <div class="picker-dot" style="background:#7c6aff;"></div>
+      <div>
+        <div class="picker-name">TCK Culture Pulse</div>
+        <div class="picker-meta">Wave 1 &nbsp;·&nbsp; Jun 2026 &nbsp;·&nbsp; 32 respondents</div>
+      </div>
+    </div>`;
+
+  if (all.length) {
+    html += `<div style="height:0.5px;background:var(--border);margin:4px 0;"></div>`;
+    all.forEach((s, i) => {
+      const dateStr = new Date(s.savedAt).toLocaleDateString('ko-KR', {month:'short', day:'numeric'});
+      const active = currentPage === 'sv-' + s.id;
+      html += `<div class="survey-picker-item ${active ? 'picker-active' : ''}" onclick="_pickSurvey('sv-${s.id}')">
+        <div class="picker-dot" style="background:${_PICKER_COLORS[(i+1) % _PICKER_COLORS.length]};"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="picker-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.name}</div>
+          <div class="picker-meta">${dateStr} &nbsp;·&nbsp; ${s.respondentCount} resp &nbsp;·&nbsp; ${s.columns.length} Q's</div>
+        </div>
+      </div>`;
+    });
+  } else {
+    html += `<div style="padding:16px;font-size:12px;color:var(--text3);text-align:center;border-top:0.5px solid var(--border);">저장된 서베이 없음</div>`;
+  }
+
+  document.getElementById('surveyPicker').innerHTML = html;
+}
+
+function _pickSurvey(pageId) {
+  document.getElementById('surveyPicker').classList.remove('open');
+  const arrow = document.querySelector('.picker-arrow');
+  if (arrow) arrow.style.transform = '';
+  showPage(pageId);
+}
+
+function _buildSurveyPageHTML(survey) {
+  const { name, savedAt, respondentCount, columns, id } = survey;
+  const txCols = columns.filter(c => c.type === 'text' && c.analysis);
+  const thAgg = {};
+  txCols.forEach(c => c.analysis.themes.forEach(t => { thAgg[t.label] = (thAgg[t.label]||0)+t.count; }));
+  const topThm = Object.entries(thAgg).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const maxCnt = topThm[0]?.[1]||1;
+  let tP=0,tN=0;
+  txCols.forEach(c => { tP+=c.analysis.sentiment.positive; tN+=c.analysis.sentiment.negative; });
+  const tAll = txCols.reduce((s,c)=>s+c.analysis.count,0)||1;
+  const oPosP=Math.round(tP/tAll*100), oNegP=Math.round(tN/tAll*100);
+  const t1=topThm[0]?.[0], t2=topThm[1]?.[0];
+  const story = t1
+    ? `Responses cluster around <strong>${t1}</strong>${t2?` and <strong>${t2}</strong>`:''} — with <strong>${oPosP}%</strong> positive sentiment and <strong>${oNegP}%</strong> highlighting areas of concern.`
+    : `Survey completed with ${respondentCount} respondents across ${columns.length} questions.`;
+  const allQuotes = txCols.flatMap(c => (c.analysis.quotes||[]).slice(0,2).map(q => ({ q, hdr: c.header })));
+  const dateStr = new Date(savedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+
+  return `
+    <div class="sec-header" style="margin-top:1rem;">
+      <div class="sec-title">${name}</div>
+      <div class="sec-line"></div>
+      <div class="sec-tag" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);">${dateStr} &nbsp;·&nbsp; ${respondentCount} respondents &nbsp;·&nbsp; ${columns.length} questions</div>
+    </div>
+    <div class="hero" style="margin-bottom:1.5rem;">
+      <div class="hero-card accent-purple"><div class="hero-label">Respondents</div><div class="hero-value">${respondentCount}</div></div>
+      <div class="hero-card accent-green"><div class="hero-label">Questions Analyzed</div><div class="hero-value">${columns.length}</div></div>
+      <div class="hero-card accent-amber"><div class="hero-label">Overall Positive</div><div class="hero-value">${oPosP}<span style="font-size:20px">%</span></div></div>
+      <div class="hero-card accent-red"><div class="hero-label">Concern Signals</div><div class="hero-value">${oNegP}<span style="font-size:20px">%</span></div></div>
+    </div>
+    ${txCols.length ? `
+    <div style="background:linear-gradient(135deg,rgba(124,106,255,0.1),rgba(168,85,247,0.05));border:0.5px solid rgba(124,106,255,0.25);border-radius:var(--radius-lg);padding:1.5rem 2rem;margin-bottom:2rem;">
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--accent);letter-spacing:0.08em;margin-bottom:8px;">THE STORY IN ONE LINE</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);line-height:1.5;">${story}</div>
+    </div>
+    <div class="grid-2" style="margin-bottom:2rem;">
+      <div class="card">
+        <div class="card-title">Dominant Themes Across All Questions</div>
+        ${topThm.map(([label,count])=>`<div class="theme-item"><div class="theme-name" style="font-size:12px;width:170px;">${label}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${Math.round(count/maxCnt*100)}%;background:var(--accent);"></div></div><div class="theme-count">${count}</div></div>`).join('')}
+      </div>
+      <div class="card">
+        <div class="card-title">Sentiment by Question</div>
+        ${txCols.map(c => {
+          const a=c.analysis, t=a.count||1;
+          const p=Math.round(a.sentiment.positive/t*100), n=Math.round(a.sentiment.negative/t*100);
+          const qi=columns.indexOf(c);
+          return `<div style="margin-bottom:10px;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:3px;">Q${qi+1}: ${c.header.slice(0,55)}${c.header.length>55?'…':''}</div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:1px;">
+              <div style="width:${p}%;background:var(--green);min-width:${p>0?2:0}px;border-radius:4px 0 0 4px;"></div>
+              <div style="width:${n}%;background:var(--red);min-width:${n>0?2:0}px;"></div>
+              <div style="flex:1;background:var(--bg3);border-radius:0 4px 4px 0;"></div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:3px;">
+              <span style="font-size:10px;color:var(--green);">✓ ${p}%</span>
+              <span style="font-size:10px;color:var(--red);">⚠ ${n}%</span>
+              <span style="font-size:10px;color:var(--text3);">— ${100-p-n}%</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>` : ''}
+    <div class="sec-header">
+      <div class="sec-title" style="font-size:18px;">Question-by-Question Analysis</div>
+      <div class="sec-line"></div>
+    </div>
+    ${columns.map((col, qi) => _buildStaticCard(col, qi)).join('')}
+    ${allQuotes.length ? `
+    <div class="sec-header" style="margin-top:2rem;">
+      <div class="sec-title" style="font-size:18px;">Notable Responses</div>
+      <div class="sec-line"></div>
+    </div>
+    <div class="grid-2">
+      ${allQuotes.slice(0,8).map(({q,hdr})=>`<div><div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:4px;">${hdr.slice(0,50)}${hdr.length>50?'…':''}</div><div class="quote-item q-purple" style="font-size:12px;">"${q.length>200?q.slice(0,200)+'…':q}"</div></div>`).join('')}
+    </div>` : ''}
+    <div style="text-align:center;margin-top:3rem;padding-top:2rem;border-top:0.5px solid var(--border);">
+      <button onclick="_deleteSurveyAndNav(${id})" style="background:rgba(239,68,68,0.08);border:0.5px solid rgba(239,68,68,0.25);color:var(--red);padding:10px 24px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;">Delete This Survey</button>
+    </div>`;
+}
+
+function _buildStaticCard(col, qi) {
+  const qLabel = 'Q'+(qi+1);
+  if (col.type === 'text') {
+    const a = col.analysis; if (!a) return '';
+    const t=a.count, posP=Math.round(a.sentiment.positive/t*100), negP=Math.round(a.sentiment.negative/t*100), neuP=100-posP-negP;
+    return `<div class="card survey-card" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+        <div style="flex:1;"><span class="pill pill-purple" style="display:inline-block;margin-bottom:8px;">${qLabel} &nbsp;·&nbsp; Open Text</span><div style="font-size:15px;font-weight:500;line-height:1.5;">${col.header}</div></div>
+        <div style="text-align:right;flex-shrink:0;"><div style="font-family:'DM Serif Display',serif;font-size:28px;">${t}</div><div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;">responses</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.9fr 1.1fr;gap:14px;">
+        <div>
+          <div class="card-title">Key Themes</div>
+          ${a.themes.length ? a.themes.map(th=>`<div class="theme-item"><div class="theme-name" style="font-size:11px;width:140px;">${th.label}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${th.pct}%;background:var(--accent);"></div></div><div class="theme-count">${th.pct}%</div></div>`).join('') : '<div style="font-size:12px;color:var(--text3);">No dominant themes</div>'}
+          <div style="margin-top:14px;"><div class="card-title">Frequent Words</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${a.topWords.slice(0,10).map(([w,c])=>`<span class="pill pill-purple" style="font-size:10px;">${w} <span style="opacity:0.55">${c}</span></span>`).join('')}</div></div>
+        </div>
+        <div>
+          <div class="card-title">Sentiment</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="background:rgba(34,197,94,0.1);border:0.5px solid rgba(34,197,94,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Positive</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--green);">${posP}%</span></div>
+            <div style="background:rgba(239,68,68,0.1);border:0.5px solid rgba(239,68,68,0.2);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Concern</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--red);">${negP}%</span></div>
+            <div style="background:rgba(90,90,114,0.08);border:0.5px solid rgba(90,90,114,0.15);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;color:var(--text2);">Neutral</span><span style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--text2);">${neuP}%</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="card-title">Notable Responses</div>
+          <div class="quote-list">${a.quotes.slice(0,3).map(q=>`<div class="quote-item q-purple" style="font-size:12px;">"${q.length>150?q.slice(0,150)+'…':q}"</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+  if (col.type === 'categorical') {
+    const {freq,total}=col;
+    const pal=['#7c6aff','#22c55e','#ef4444','#f59e0b','#14b8a6','#3b82f6','#ec4899'];
+    return `<div class="card" style="margin-bottom:14px;"><span class="pill pill-teal" style="display:inline-block;margin-bottom:8px;">${qLabel} &nbsp;·&nbsp; Multiple Choice</span><div style="font-size:15px;font-weight:500;margin-bottom:14px;">${col.header}</div>${freq.map(([k,c],i)=>`<div class="theme-item"><div class="theme-name" style="font-size:12px;width:220px;">${k}</div><div class="theme-bar-track"><div class="theme-bar-fill" style="width:${Math.round(c/total*100)}%;background:${pal[i%pal.length]};"></div></div><div class="theme-count">${Math.round(c/total*100)}% (${c})</div></div>`).join('')}</div>`;
+  }
+  if (col.type === 'numeric') {
+    const a=col.numAnalysis; if (!a) return '';
+    return `<div class="card" style="margin-bottom:14px;"><span class="pill pill-amber" style="display:inline-block;margin-bottom:8px;">${qLabel} &nbsp;·&nbsp; Scale / Number</span><div style="font-size:15px;font-weight:500;margin-bottom:14px;">${col.header}</div><div style="display:flex;gap:14px;"><div class="card" style="padding:12px 18px;text-align:center;flex:1;"><div class="hero-label">Average</div><div style="font-family:'DM Serif Display',serif;font-size:24px;">${a.avg}</div></div><div class="card" style="padding:12px 18px;text-align:center;flex:1;"><div class="hero-label">Min / Max</div><div style="font-family:'DM Serif Display',serif;font-size:24px;">${a.min} / ${a.max}</div></div><div class="card" style="padding:12px 18px;text-align:center;flex:1;"><div class="hero-label">Responses</div><div style="font-family:'DM Serif Display',serif;font-size:24px;">${a.count}</div></div></div></div>`;
+  }
+  return '';
+}
+
+function _toggleSurveysDropdown() { /* deprecated */ }
+function _closeSurveysDropdown() { /* deprecated */ }
+
+function _resetUploader() {
+  document.getElementById('surveyResults').innerHTML='';
+  document.getElementById('surveyResults').style.display='none';
+  document.getElementById('uploadArea').style.display='block';
+  document.getElementById('surveyFile').value='';
+  _destroyCharts();
+}
+
+function _handleSurveyFile(file) {
+  if (!file) return;
+  document.getElementById('uploadArea').style.display='none';
+  document.getElementById('loadingState').style.display='block';
+  document.getElementById('surveyResults').innerHTML='';
+  document.getElementById('surveyResults').style.display='none';
+
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  setTimeout(()=>{
+    if (ext==='csv') {
+      const reader = new FileReader();
+      reader.onload = e=>{
+        const rows = _parseSurveyCSV(e.target.result);
+        if (rows.length<2) { alert('File appears empty or not readable.'); _resetUploader(); return; }
+        _processAndRender(rows[0], rows.slice(1), file.name);
+      };
+      reader.readAsText(file, 'UTF-8');
+    } else {
+      if (typeof XLSX==='undefined') { alert('Excel support not loaded yet. Try refreshing the page.'); _resetUploader(); return; }
+      const reader = new FileReader();
+      reader.onload = e=>{
+        try {
+          const wb = XLSX.read(e.target.result, {type:'array'});
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const json = XLSX.utils.sheet_to_json(ws, {header:1, defval:''});
+          if (json.length<2) { alert('Sheet appears empty.'); _resetUploader(); return; }
+          _processAndRender(json[0].map(String), json.slice(1), file.name);
+        } catch(err) { alert('Could not read Excel file. Try saving as CSV and uploading again.'); _resetUploader(); }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }, 80);
+}
+
+// Init uploader interactions
+window.addEventListener('DOMContentLoaded', ()=>{
+  const zone = document.getElementById('dropZone');
+  const input = document.getElementById('surveyFile');
+  if (!zone||!input) return;
+  input.addEventListener('change', e=>{ if(e.target.files[0]) _handleSurveyFile(e.target.files[0]); });
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.style.borderColor='var(--accent)'; zone.style.background='rgba(124,106,255,0.07)'; });
+  zone.addEventListener('dragleave', ()=>{ zone.style.borderColor=''; zone.style.background=''; });
+  zone.addEventListener('drop', e=>{ e.preventDefault(); zone.style.borderColor=''; zone.style.background='';
+    if(e.dataTransfer.files[0]) _handleSurveyFile(e.dataTransfer.files[0]); });
+  _updateSurveyMenu();
+});
+
+// ═══════════════════════════ SECTION B DOWNLOAD DATA ═══════════════════════════
+const surveyQ1 = [
+  "Smaller collaborative team",
+  "Collaboration & challenge",
+  "People participate & join the cultural movement.",
+  "Freedom to think and act differently without fear, appreciation for brilliant failures, ability to create career opportunities by ourselves by showing value",
+  "There is a strong willingness to execute based on the intent to develop vehicles effectively.",
+  "Specially the vision of prepare and care of our people to prepare them for the future like trainings, universities partnership, ITAPs. Also I like the innovation culture implemented.",
+  "Diverse, Challenge, Respect, Volunteer",
+  "Mutual Respect",
+  "Continued efforts on making progress and changes",
+  "Less hierarchy compared to other companies in Korea and offers flexibility and individual discretion.",
+  "1. Safety First !!  2. I like the passion, responsibility, and commitment of TCK people.",
+  "Strong ownership mindset",
+  "It seems that TCK culture is currently in a transition phase as it moves to the next level.",
+  "New way of working by adopting evolving technologies",
+  "Cooperation in Common Goals",
+  "Responsibility",
+  "'Consistency' - not just about Communication, but also about following through with actions consistently",
+  "Our teams are dedicated. We value hard work, fast action and have pride in our work.",
+  "Commitment to deliver the result",
+  "Strong safety mindset, Good transparency, People care about safety first, Open communication, Good teamwork, High responsibility",
+  "Eastern and Western cultures are well balanced. It's not so much a Korean class culture as possible, but rather a somewhat rational conversation",
+  "Sense of Responsibility",
+  "Consistency",
+  "Team",
+  "Horizontal communication and Safety First Culture",
+  "Respect each other. Drive for result.",
+  "It gives us purpose and focus on our future",
+  "Strong ownership and teamwork",
+  "Execution mindset",
+  "Be accountable for what GMTCK has to achieve and contribute to collectively",
+  "Everybody",
+  "여러가지 다양한 것들에 참여 가능"
+];
+
+const surveyQ2 = [
+  "Too many extra activities",
+  "Hesitation to speak up",
+  "But most people do not want to lead the cultural movement.",
+  "Too many unrelated goals, leading to loss of focus, time and productivity. Use the right people for the right goals not all goals.",
+  "There is an internalized concern about sustaining efforts, stemming from the perception that we are lagging behind our competitors.",
+  "When started here, I thought that some communication was not totally transparent and good to convince the entire people towards to the same direction. I have as a principle that each challenging action requires a clear purpose - without that it is plan to fail.",
+  "Seniority (Yet), Title",
+  "Selfishness",
+  "Some people avoid change and hold things back. They complain rather than seeing bright side of the efforts.",
+  "A high number of meetings and activities that limit focus on core work, along with low voluntary engagement and contribution.",
+  "1. Culture where Brian has a strong influence on all policy decisions. 2. TCK asks people to change quickly, but leadership does not always give them enough clarity, time, or support",
+  "There is a strong tendency to show up and be visible in front of leadership (especially PEC staff)",
+  "The large number of culture change initiatives appears to be reducing the perceived importance of core work.",
+  "Many people are staying behind the labor union to be in the comfort zone",
+  "Resource silos",
+  "Push",
+  "Lack of trust",
+  "We have a keen ability to move quickly, but our culture tends to be one of speed above all. Deadlines are often short and urgent, resulting in outputs that feel compromised or short-sighted to meet timing.",
+  "Not enough empowerment",
+  "Too many procedures, Slow decision making, Difficult budget execution, Too much approval process, Less flexibility",
+  "Some decisions are made by a small group of people, and at times these decisions run counter to the thoughts and opinions of the majority of employees. Senior leadership, including ISP, feel lacks personal connection with employees.",
+  "Slow to adapt to changes",
+  "Strong push for execution",
+  "The lack of leadership",
+  "Resource gap and Silo thinking.",
+  "Not much voice as other oriental culture. Speaking in English makes Korean employees feel less smart.",
+  "It is not easy for our engineers to understand it",
+  "Too much caution and not enough speed",
+  "The speed of change is not consistent",
+  "Lack of respecting individuals so that they can do best",
+  "Need to focus in core activity",
+  "업무외 시간을 너무 많이 빼앗김. 그렇다고 업무를 덜어주는 것도 아니고 업무는 그대로 + Side job 만 계속 늘어남."
+];
+
+const surveyQ3 = [
+  "Ability to deal with ambiguity",
+  "Not enough clarity and transparency",
+  "The 'WHY' is lacking.",
+  "Breaking the hierarchical mindset, give people the trust to respect leaders based on their behaviors and actions, not because of their levels or words",
+  "Self-confidence",
+  "How to balance our multi-function future engineer with not losing expertise in crucial subjects. Multi-functional is great but competitiveness also relies on specialization. Focus is also important.",
+  "Self objectification, 'Nim' world",
+  "Sincerity",
+  "More trust and honest communication.",
+  "A stronger focus on priorities and simplicity to improve efficiency",
+  "1. Pride in working at TCK!!  2. We need more trust, more honest communication, and more visible support for people who are struggling with change",
+  "There seem to be many PLs who present a completely different face to leaders versus staff, but this does not appear to be clearly recognized or properly evaluated",
+  "Sincerely genuine participants who really seek for Culture Change",
+  "Need to connect the good initiatives together for the efficiency and speed",
+  "Company loyalty",
+  "Respect",
+  "Lack of trust",
+  "Empowerment. There is a bias towards micro-management rather than empowerment preventing leaders from managing their teams as they see fit. The volume and level of CAP goals and tracking is an example.",
+  "Decisions still feel top-down",
+  "More investment for the next 5 years, More focus on future business, More new technology development, More long-term planning",
+  "The virtue of humility may be our weakness. We are not good at promotion of ourselves and not exposing ourselves especially in public.",
+  "Sense of ownership",
+  "Better alignment in execution",
+  "We lack self belief",
+  "Keep continuing to connect our vision to the daily work",
+  "Lack of pride about company.",
+  "Reinforce the positive aspects of the current culture that will help us change for the future",
+  "More open sharing, faster learning, and stronger cross-functional execution",
+  "Broader shared belief in AiO and future capability building",
+  "The power of Collective intelligence gets overlooked from time to time",
+  "Good",
+  "너무 모든 것을 리더가 또는 우리가 직접 해야 한다는 논리."
+];
+
+const surveyPart2 = [
+  "S1Q1: We will have the ability to shift and execute different work on demand. S1Q2: I would be most proud of the programs we were able to deliver overcoming challenges with GMNA alignment. S2Q1: We need to continue to drive to quickly adapt to new threats and identify how we can add value. S2Q2: The need to step out regularly and think about overall strategy instead of being consumed by issues of the moment.",
+  "S1Q1: Take broader leadership in global engineering and make a direct impact on the industry. S1Q2: I would be proud to have been at the forefront of making TCK S&S a leading force in GM global engineering. S2Q1: I would create more opportunities for employees to gain direct global experience and network. S2Q2: Lack of leadership support due to global financial environment.",
+  "S1Q1: Succeed in AIO will enable us to help others. Before we knew other areas, we could not help others but now we can. S1Q2: (same as above). S2Q1: I would regret not having enough time studying advanced technology. S2Q2: We are too focused on developing vehicle with current technology and do not have time to study new things.",
+  "S1Q1: If succeeded TCK can do a lot more with a lot less. S1Q2: Being a leader, driving changes at a strategic and technology level to ensure career growth of our people. S2Q1: People lost focus by doing multiple things they are not related to or capable of. S2Q2: My younger self would need to change in helping peers realize the need for speed and upskilling.",
+  "S1Q1: To effectively expand our technical spectrum we need to preserve existing capabilities while strategically integrating additional skills. S1Q2: We successfully pioneered virtualization in Korea, completing product development without a physical vehicle and reducing timeline by 86 weeks. S2Q1: All team members must understand and work together toward the goal. S2Q2: We need continuous communication and leaders who support and enable their teams.",
+  "S1Q1: AIO 2.0 idea to have multi-functional Engineers in their specific areas also knowing new tools (AI/Immersive/NX) prepares employees to be useful for the company helping to balance the peak and valleys of workload. S1Q2: My career is already a multi-task one and I look back very positive. S2Q1: Not getting prepared and learning the tools my company offered to be a better skilled leader/Engineer. S2Q2: Innovation culture is the key and ambidextrous approach is the way to win.",
+  "S1Q1/S1Q2: Change is a good thing. It is worth adapting change for myself and organization. S2Q1: The part where we were unable to lead all members of the organization and change together.",
+  "S1Q1: Focusing on more valued works which AI cannot do. S1Q2: I could secure your jobs. S2Q1: I regret not being able to fully engage and convince less proactive engineers. S2Q2: My bias and lack of varied approaches limited change—greater persistence and adaptability could have led to a different outcome.",
+  "S1Q1: Becoming most valued engineering center in GM. S1Q2: We were proactive on upskilling ourselves in the era of AI, and this has led me to be more efficient in the future technical world. S2Q1: Share with your team the sense of urgency about competitors' rapid growth which can be a threat for our future. S2Q2: We are too focused on daily tasks rather than seeing the future.",
+  "I believe our long-term competitiveness comes down to how well we develop our people and broaden their capabilities. I want to build a culture where people step up, look ahead, and deliver real results.",
+  "S1Q1: TCK will be able to move faster and more flexibly. People can solve problems across boundaries without being limited by narrow roles. S1Q2: I would be most proud to say I helped create a culture where people became stronger because the organization truly invested in their growth. S2Q1: My biggest regret would be not speaking up earlier about the human side of change. S2Q2: What prevented me was pressure of immediate work and belief that people would eventually adapt on their own.",
+  "S1Q1: If we truly succeed, TCK can move faster, solve problems end-to-end, and compete globally without relying too much on others. S1Q2: I would be proud to say we built a team where everyone stepped up and learned new skills. S2Q1: My biggest regret would be not pushing hard enough for faster change—especially in breaking silos. S2Q2: What held me back was balancing short-term results over long-term capability building.",
+  "S1Q1: Multiple program executions in a short period of time with high competitiveness. S1Q2: Not AIO specifically, but many global program executions with people's passion and fast movement. S2Q1: I hesitated to help set up a bold mindset in younger employees. S2Q2: I was concerned about how I might be perceived by leadership.",
+  "S1Q1: Empowered by engineers with advanced skillsets, TCK can contribute far more to GM—across programs and advanced work. S1Q2: I would be most proud to tell the story of how we successfully upskilled and reskilled engineers from physical to virtual engineering. S2Q1: I would regret having accepted limitations too easily and not encouraging teams to fail fast. S2Q2: I would tell myself to spend more time checking in on the progress of upskilling and adoption of new innovative processes.",
+  "S1Q1/S1Q2: We are building a foundation for software development. If successful, we will lead the industry based on TCK's new capabilities. S2Q1: I was too faithful to the rules and BP set by GM. S2Q2: Breaking the rules was considered the greatest wrong. Leadership with an open mind and open thinking is needed.",
+  "Adapting and leading new ones.",
+  "S1: If AIO succeeds, it will increase profitability, simplify processes, and enable us to bring vehicles that customers want to market more quickly. We must apply cutting-edge technology ahead of others and cultivate curiosity about new technologies.",
+  "S1Q1: TCK will have the ability to seamlessly execute programs with greater speed and effectiveness. Engineers will have knowledge and access to a variety of tools. S1Q2: I would be proud to have a part in creating a culture of engineers who love what they do. S2Q1: I would tell myself to wake up and realize the old way is a plan to fail. S2Q2: I would urge myself to get closer to discomfort and push a little more.",
+  "S1Q1: If this effort fully succeeds, TCK will operate with versatile engineers who can adapt to any program. S1Q2: I was in comfort zone within inertia and avoided risks; I should have helped people learn more skills and move more flexibly earlier. S2: (combined above)",
+  "S1Q1: TCK will become much more flexible and competitive—responding faster with less dependency on key people. S1Q2: The story I would be most proud to tell is that I helped create a safer workplace. S2Q1: My biggest regret would be not pushing for future-focused investment and new technology development. S2Q2: What prevented me was pressure of daily operations, limited flexibility, budget difficulty, and a culture too focused on process.",
+  "S1Q1: The company will secure a lot of human resource flexibility to carry out projects under various conditions. S1Q2: The courage to leave the comfortable zone and take on a challenge. S2Q1: I would focus on changing the organization rather than changing the staff. S2Q2: You need courage, speed, and much more dialogue.",
+  "S1: Through upskilling and AIO, it is possible to drive additional output with the current headcount while improving work efficiency. S2: I believe I may regret not having taken a more proactive stance in challenging GM's fixed specifications and requirements.",
+  "S1: If successful, we will evolve into a flexible AiO-based organization and become a top-performing program partner. S2: My biggest regret would be relying too heavily on standards and processes, which slowed down execution and limited our willingness to take risks.",
+  "S1Q1/S2Q1: That I did not spend enough time going deep on the capabilities of artificial intelligence. S2Q2: Make more space for it.",
+  "S1Q1: Well managed workload with flexibility. We can execute programs with more optimized resources and faster. S1Q2: I would be proud that we challenged even under big pressure with many programs. S2Q1: We are not facing but in the middle of big changes. You should keep moving right now. S2Q2: Your actions are not enough, it is time to run faster.",
+  "It is very essential to reskill or upskill for a new future, but it should not be the same for all people. AIO should include more various skills, not just NX or CAE. Very good goal but not a good method yet.",
+  "S1: TCK will be able to be a reference of delivery excellence in our products in the lowest possible time, and faster bring innovation to the customer. S2: I regret not having learned more technology and having challenged the team more; there was high resistance to embracing technology.",
+  "S1Q1: TCK will be able to work across boundaries more naturally and deliver more outcome with the same resources. S1Q2: The best story will be about building a team that kept challenging and became stronger together. S2Q1: My biggest regret would be not moving earlier and more boldly to build a culture of challenge. S2Q2: What prevented it would be the pressure of immediate deliverables and limited time.",
+  "S1Q1: We will move from reactive to predictive problem solving and become a team that proposes integrated, technology-enabled solutions. S1Q2: The story I would be most proud of is helping open people's potential beyond the boundaries of their current roles. S2Q1: My biggest regret would be any moment I accepted familiar ways simply because they were still working. S2Q2: I would tell my younger self that people have more potential than we often realize and leadership is about creating conditions for that potential to grow.",
+  "S1Q1: More efficiency and flexibility at allocating complicated jobs to AIO engineers. S1Q2: Even if many others are fearful, GMTCK can do a pilot test and make it successful. S2Q1: Just followed blindly the BP and guidelines without questioning. S2Q2: Can I make a different way or approach with another technology or learning?"
+];
+
+const surveyPart3 = [
+  "We must find ways of executing work more efficiently by leveraging the tools at our disposal so we can make time to innovate.",
+  "This is an essential and non-negotiable foundational capability for us to keep learning, grow beyond our current roles, and through continuous challenge become an organization that not only adapts to change, but leads it.",
+  "Spare some time for studying of what you don't know.",
+  "Start Upskilling to stay relevant - Continue to Stay Focused on Value creation - Stop wasting time on non-value adding events/meetings/speculations",
+  "We are better—and we can do it smarter—than China.",
+  "My main culture aspect / my mantra is: The most valued Technical Center means The most valued People. We are investing in people to become valued and unique to turn our business efficient and innovative!",
+  "We are witnessing rapid changes in society and in the world around us due to AI and new technologies. However, some people in our organization are still repeating the same work they have been doing for the past 20 years, refusing to embrace change while demanding higher wages and better benefits. Is this a desirable approach?",
+  "Settling for the status quo means you are already falling behind.",
+  "World is changing rapidly. No kidding. We all have to proactively prepare ourselves. Our competitiveness is not secured unless we care about our innovation skills.",
+  "Standing still is no longer an option. Learn fast, adapt, and turn change into real impact.",
+  "The future will not wait for us. Not an option but a mandatory.",
+  "If we grow our capability every day, we don't just follow change—we lead it!",
+  "Improving and changing yourself every day should be as essential as the air you breathe for your life",
+  "TCK is the only organization that can truly be competitive against China. When we materialize TCK's initiatives, TCK can be the most respected technical center in GM.",
+  "Without challenges, there is no future.",
+  "Grow together",
+  "Technology in today's market is changing at a rapid pace, and if we fail to jump on that speeding locomotive, the train will leave the station and we will be left behind, losing the competition forever.",
+  "Our future looks different than our past and present. To be competitive, we must embrace change and find new ways to accelerate the way we do our work through mindset, upskilling, collaboration, and a willingness to win!",
+  "Feeling unstable is how we move forward",
+  "In a rapidly changing environment, building a culture of upskilling, AiO, and innovation is essential to maximize efficiency and create a sustainable business for the future.",
+  "We have studied for over 20 years to work for this company. What efforts are you making to maintain your job? As professionals, building up your skills is your own responsibility, not someone else's.",
+  "It is not the strongest organization that survives, but the one that adapts to change.",
+  "Growth is uncomfortable, but it's the only way we get better.",
+  "I build leaders, strengthen capability, and shape a culture that delivers with excellence.",
+  "We can grow up when we feel it is not comfortable.",
+  "If you are not preparing, then you are preparing to fail.",
+  "I will tell my team that every big accomplishment starts with a small step into a different direction, and I will be there to guide and help them to succeed, I trust them and we need to be fearless because together we can do everything.",
+  "Innovation and challenge matter because the future will not wait for us, and the greatest risk for both our business and ourselves is to stand still. Gradatim Ferociter—step by step, ferociously.",
+  "I want our team to be more than a group that delivers today's work well. I want us to become a team that defines future challenges early and solves them with stronger capability, AiO, and a true culture of innovation — because that is how we unlock the full potential of our people.",
+  "Don't waste your time on doing something proven but used for many years without being challenged. Try to learn something unfamiliar and do your job in a new way which requires recent technologies."
+];
+
+function csvCell(val) {
+  return '"' + String(val || '').replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+}
+function toCSV(rows) {
+  return rows.map(function(row) { return row.map(csvCell).join(','); }).join('\r\n');
+}
+function triggerDownload(content, filename) {
+  var blob = new Blob(['﻿' + content], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function downloadFile1() {
+  var headers = ['Respondent #', 'Functional Leader (MD) — TO BE ASSIGNED', 'Q1 — What do you LIKE about TCK culture?', 'Q2 — What do you DISLIKE about TCK culture?', 'Q3 — What is LACKING or MISSING from TCK culture?', 'Part 2 — Personal Reflections (AiO + 2036 Time-travel)', 'Part 3 — Personal Mantra for Team'];
+  var rows = [headers];
+  var n = Math.max(surveyQ1.length, surveyQ2.length, surveyQ3.length, surveyPart3.length);
+  for (var i = 0; i < n; i++) {
+    rows.push([i + 1, '', surveyQ1[i] || '', surveyQ2[i] || '', surveyQ3[i] || '', surveyPart2[i] || '', surveyPart3[i] || '']);
+  }
+  triggerDownload(toCSV(rows), 'TCK_DL_Feedback_by_MD_Template.csv');
+}
+function downloadFile2() {
+  var headers = ['Respondent #', 'Q1 — What do you LIKE about TCK culture?', 'Q2 — What do you DISLIKE about TCK culture?', 'Q3 — What is LACKING or MISSING from TCK culture?', 'Part 2 — Personal Reflections (AiO + 2036 Time-travel)', 'Part 3 — Personal Mantra for Team'];
+  var rows = [headers];
+  var n = Math.max(surveyQ1.length, surveyQ2.length, surveyQ3.length, surveyPart3.length);
+  for (var i = 0; i < n; i++) {
+    rows.push([i + 1, surveyQ1[i] || '', surveyQ2[i] || '', surveyQ3[i] || '', surveyPart2[i] || '', surveyPart3[i] || '']);
+  }
+  triggerDownload(toCSV(rows), 'TCK_All_FL_Feedback_Combined.csv');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.topbar-nav button').forEach(b => {
+    const oc = b.getAttribute('onclick') || '';
+    const dp = b.getAttribute('data-page') || '';
+    b.classList.toggle('active', oc.includes("'" + id + "'") || dp === id);
+  });
+  // Update topbar title + show/hide TCK-only nav buttons
+  const _tckPages = ['overview','part1','part2','actions','waves','analyzer','sectionb'];
+  const _isTCK = _tckPages.includes(id);
+  document.querySelectorAll('.topbar-nav [data-tck]').forEach(b => {
+    b.style.display = _isTCK ? '' : 'none';
+  });
+  const titleEl = document.getElementById('topbarTitle');
+  if (titleEl) {
+    let label = 'TCK Culture Pulse';
+    if (!_isTCK) {
+      const _all = JSON.parse(localStorage.getItem('_tckSurveys') || '[]');
+      const _sv = _all.find(s => 'sv-' + s.id === id);
+      if (_sv) label = _sv.name;
+    }
+    titleEl.dataset.page = id;
+    titleEl.innerHTML = label + '<span class="picker-arrow">▾</span>';
+  }
+  window.scrollTo(0,0);
+}
+
+const darkPalette = {
+  green: '#22c55e', red: '#ef4444', blue: '#3b82f6',
+  amber: '#f59e0b', purple: '#7c6aff', teal: '#14b8a6'
+};
+const gridColor = 'rgba(255,255,255,0.06)';
+const textColor = '#9090a8';
+const defaults = {
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'DM Sans', size: 11 } } },
+    y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'DM Sans', size: 11 } } }
+  }
+};
+
+// Sentiment donut
+new Chart(document.getElementById('sentimentChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Positive (Q1)', 'Concerns (Q2)', 'Gaps (Q3)'],
+    datasets: [{
+      data: [38, 35, 27],
+      backgroundColor: [darkPalette.green, darkPalette.red, darkPalette.blue],
+      borderWidth: 0, borderRadius: 4, spacing: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '68%',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + '%' } } }
+  }
+});
+
+// Theme frequency bar chart
+// ── WORD CLOUD — Culture Snapshot ───────────────────────────────────────────
+(function() {
+  const _WC = [
+    // Q1 — What leaders LIKE (green)  size 1–5 = relative frequency
+    {w:'Teamwork',         s:5, g:'q1'}, {w:'Safety First',      s:4, g:'q1'},
+    {w:'Ownership',        s:4, g:'q1'}, {w:'Collaboration',     s:4, g:'q1'},
+    {w:'Commitment',       s:3, g:'q1'}, {w:'Execution mindset', s:3, g:'q1'},
+    {w:'Responsibility',   s:3, g:'q1'}, {w:'Flat Hierarchy',    s:3, g:'q1'},
+    {w:'Transparency',     s:2, g:'q1'}, {w:'Respect',           s:2, g:'q1'},
+    {w:'Innovation',       s:2, g:'q1'}, {w:'Flexibility',       s:2, g:'q1'},
+    {w:'Accountability',   s:2, g:'q1'}, {w:'East-West Balance', s:1, g:'q1'},
+    {w:'Purpose',          s:1, g:'q1'}, {w:'People-first',      s:1, g:'q1'},
+    // Q2 — What leaders DISLIKE (red)
+    {w:'Speed over Quality',    s:5, g:'q2'}, {w:'Meeting Overload',  s:4, g:'q2'},
+    {w:'Silo Thinking',         s:4, g:'q2'}, {w:'Micro-management',  s:3, g:'q2'},
+    {w:'Resistance to Change',  s:3, g:'q2'}, {w:'Top-Down Decisions',s:3, g:'q2'},
+    {w:'Lack of Clarity',       s:3, g:'q2'}, {w:'Bureaucracy',       s:2, g:'q2'},
+    {w:'No Voice',              s:2, g:'q2'}, {w:'Lack of Focus',     s:2, g:'q2'},
+    {w:'Visibility Theater',    s:2, g:'q2'}, {w:'Slow to Adapt',     s:2, g:'q2'},
+    {w:'Fear of Speaking Up',   s:2, g:'q2'}, {w:'Short-term Thinking',s:1, g:'q2'},
+    // Q3 — What's MISSING (blue)
+    {w:'Trust',                  s:5, g:'q3'}, {w:'The WHY',           s:4, g:'q3'},
+    {w:'Empowerment',            s:4, g:'q3'}, {w:'Honest Dialogue',   s:3, g:'q3'},
+    {w:'Company Pride',          s:3, g:'q3'}, {w:'Future Investment',  s:3, g:'q3'},
+    {w:'Psychological Safety',   s:2, g:'q3'}, {w:'Shared Ownership',  s:2, g:'q3'},
+    {w:'Self-belief',            s:2, g:'q3'}, {w:'Clarity of Direction',s:2, g:'q3'},
+    {w:'Collective Intelligence',s:2, g:'q3'}, {w:'Long-term Vision',  s:1, g:'q3'},
+    {w:'Change Support',         s:1, g:'q3'},
+  ];
+  // Fisher-Yates shuffle for variety on each load
+  for (let i = _WC.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_WC[i], _WC[j]] = [_WC[j], _WC[i]];
+  }
+  const _sizes = {1: 12, 2: 16, 3: 21, 4: 28, 5: 40};
+  const _colors = {q1: '#22c55e', q2: '#ef4444', q3: '#3b82f6'};
+  const _opacities = {1: 0.55, 2: 0.65, 3: 0.8, 4: 0.92, 5: 1};
+  const container = document.getElementById('wordCloud');
+  if (!container) return;
+  _WC.forEach(({w, s, g}) => {
+    const span = document.createElement('span');
+    span.textContent = w;
+    span.style.cssText = `font-family:'DM Sans',sans-serif;font-weight:${s>=4?700:500};`
+      + `font-size:${_sizes[s]}px;color:${_colors[g]};opacity:${_opacities[s]};`
+      + `cursor:default;transition:opacity 0.2s;line-height:1.3;`;
+    span.onmouseenter = () => { span.style.opacity = '1'; span.style.textShadow = `0 0 20px ${_colors[g]}55`; };
+    span.onmouseleave = () => { span.style.opacity = String(_opacities[s]); span.style.textShadow = ''; };
+    container.appendChild(span);
+  });
+})();
+
+// Radar chart — with external HTML tooltip
+const _radarTipData = [
+  { label: 'Direction Alignment', score: '78%', color: '#22c55e',
+    insight: '22 of 32 leaders showed strong directional convergence — the destination is shared.',
+    quotes: [
+      '"Become the most valued engineering center in GM"',
+      '"Take broader leadership in global engineering and make direct impact"',
+      '"Move faster and more flexibly — people solving problems across boundaries"',
+      '"I want us to define future challenges early and solve them with stronger capability"'
+    ]},
+  { label: 'Emotional Readiness', score: '45%', color: '#f59e0b',
+    insight: 'About half feel ready — the other half are anxious about the pace and whether support exists.',
+    quotes: [
+      '"Neglecting the human side of change — people weren\'t emotionally ready"',
+      '"We need more visible support for people who are struggling with change"',
+      '"Daily pressure prevents genuine emotional investment in transformation"',
+      '"Fear of failure without safety net" cited as a top blocker'
+    ]},
+  { label: 'Time Availability', score: '32%', color: '#ef4444',
+    insight: 'The #1 practical blocker. Mentioned independently across 20+ responses.',
+    quotes: [
+      '"Upskilling is added on top of full workloads — not substituted for them"',
+      '"Daily pressure & firefighting consumes all available time"',
+      '"Too many meetings and activities that limit focus on core work"',
+      '"Budget constraints limit available time for development"'
+    ]},
+  { label: 'Skill Confidence', score: '55%', color: '#f59e0b',
+    insight: 'Leaders believe in AiO but are unsure they can personally model the transformation.',
+    quotes: [
+      '"Building a team not limited by their job titles — that\'s what I\'d be proudest of"',
+      '"Successfully upskilling engineers who spent careers in physical development"',
+      '"Not making enough space to develop genuine AI capability before it became critical"',
+      '"We have studied 20+ years for this job — what efforts are you making to maintain it?"'
+    ]},
+  { label: 'Manager Support', score: '48%', color: '#f59e0b',
+    insight: 'Support exists in pockets but is absent in others — variable and unpredictable.',
+    quotes: [
+      '"Limited leadership support" independently cited as a key blocker',
+      '"Culture where a few have strong influence on all policy decisions"',
+      '"Senior leadership feels lacks personal connection with employees"',
+      '"Some decisions run counter to the thoughts and opinions of the majority"'
+    ]},
+  { label: 'System Enablement', score: '38%', color: '#ef4444',
+    insight: 'Processes and approval layers are actively working against the culture being built.',
+    quotes: [
+      '"Too many procedures, slow decision making, too much approval process"',
+      '"Volume of CAP goals and tracking is system-level friction preventing real management"',
+      '"Micro-management rather than empowerment prevents leaders from managing their teams"',
+      '"The system rewards visibility over impact — performance theater, not real transformation"'
+    ]}
+];
+
+function _radarExternalTooltip(ctx) {
+  const {chart, tooltip} = ctx;
+  let el = document.getElementById('_radarTipEl');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_radarTipEl';
+    el.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;background:var(--card2);'
+      + 'border:0.5px solid var(--border2);border-radius:14px;padding:16px 18px;'
+      + 'min-width:290px;max-width:360px;box-shadow:0 24px 60px rgba(0,0,0,0.72);'
+      + 'opacity:0;transition:opacity 0.15s;';
+    document.body.appendChild(el);
+  }
+  if (tooltip.opacity === 0) { el.style.opacity = '0'; return; }
+  const idx = tooltip.dataPoints?.[0]?.dataIndex;
+  if (idx === undefined) return;
+  const d = _radarTipData[idx];
+  el.innerHTML = `
+    <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:${d.color};letter-spacing:0.1em;margin-bottom:6px;">${d.label}</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:32px;color:${d.color};line-height:1;margin-bottom:10px;">${d.score}</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;">${d.insight}</div>
+    <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.08em;margin-bottom:8px;">EVIDENCE FROM RESPONSES</div>
+    ${d.quotes.map(q=>`<div style="font-size:11px;color:var(--text2);line-height:1.55;padding:6px 10px;background:var(--bg3);border-radius:6px;margin-bottom:5px;">${q}</div>`).join('')}`;
+  const {left:cL, top:cT} = chart.canvas.getBoundingClientRect();
+  const x = cL + tooltip.caretX, y = cT + tooltip.caretY;
+  const w = 320;
+  let left = x + 18;
+  if (left + w > window.innerWidth - 12) left = x - w - 18;
+  el.style.left = Math.max(8, left) + 'px';
+  el.style.top = Math.max(8, y - 70) + 'px';
+  el.style.opacity = '1';
+}
+
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Direction\nAlignment', 'Emotional\nReadiness', 'Time\nAvailability', 'Skill\nConfidence', 'Manager\nSupport', 'System\nEnablement'],
+    datasets: [{
+      label: 'Wave 1',
+      data: [78, 45, 32, 55, 48, 38],
+      borderColor: darkPalette.purple,
+      backgroundColor: 'rgba(124,106,255,0.15)',
+      borderWidth: 1.5, pointRadius: 6, pointHoverRadius: 9,
+      pointBackgroundColor: darkPalette.purple,
+      pointHoverBackgroundColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false, external: _radarExternalTooltip }
+    },
+    scales: {
+      r: {
+        min: 0, max: 100,
+        grid: { color: gridColor },
+        angleLines: { color: gridColor },
+        ticks: { display: false },
+        pointLabels: { color: textColor, font: { size: 11, family: 'DM Sans' } }
+      }
+    }
+  }
+});
+
+// ── LEADERSHIP VOICES — UNIVERSAL HOVER TOOLTIP ─────────────────────────────
+const _LV_TIPS = {
+  'vision-1': { head: 'People freed from limitation — 25/32 responses', quotes: [
+    '"a culture where people became stronger because the organization truly invested in their growth"',
+    '"helping open people\'s potential beyond the boundaries of their current roles"',
+    '"we built a team where everyone stepped up and learned new skills"',
+    '"building a team that kept challenging and became stronger together"',
+    '"helping people realize the need for speed and upskilling"'
+  ]},
+  'vision-2': { head: 'Culture of genuine growth investment — 23/32 responses', quotes: [
+    '"the vision of prepare and care of our people to prepare them for the future like trainings, universities partnership, ITAPs"',
+    '"I believe our long-term competitiveness comes down to how well we develop our people and broaden their capabilities"',
+    '"people have more potential than we often realize and leadership is about creating conditions for that potential to grow"',
+    '"I want to build a culture where people step up, look ahead, and deliver real results"',
+    '"creating a culture of engineers who love what they do"'
+  ]},
+  'vision-3': { head: 'Faster cross-boundary problem solving — 22/32 responses', quotes: [
+    '"People can solve problems across boundaries without being limited by narrow roles"',
+    '"TCK can move faster, solve problems end-to-end, and compete globally without relying too much on others"',
+    '"We will move from reactive to predictive problem solving and become a team that proposes integrated solutions"',
+    '"We will have the ability to shift and execute different work on demand"',
+    '"TCK will be able to work across boundaries more naturally and deliver more outcome with the same resources"'
+  ]},
+  'vision-4': { head: 'TCK as most valued center in GM — 20/32 responses', quotes: [
+    '"Becoming most valued engineering center in GM"',
+    '"TCK can be the most respected technical center in GM"',
+    '"We will evolve into a flexible AiO-based organization and become a top-performing program partner"',
+    '"TCK will be able to be a reference of delivery excellence in our products in the lowest possible time"',
+    '"Take broader leadership in global engineering and make a direct impact on the industry"'
+  ]},
+  'vision-5': { head: 'Engineers reinvented physical → virtual — 17/32 responses', quotes: [
+    '"successfully upskilled and reskilled engineers from physical to virtual engineering"',
+    '"We successfully pioneered virtualization in Korea, completing product development without a physical vehicle and reducing timeline by 86 weeks"',
+    '"It is very essential to reskill or upskill for a new future"',
+    '"versatile engineers who can adapt to any program"',
+    '"multi-functional Engineers in their specific areas also knowing new tools (AI/Immersive/NX)"'
+  ]},
+  'regret-speed': { head: 'Moved too slowly / too rule-bound — 13 of 30 Part 2 responses (43%)', quotes: [
+    '"Just followed blindly the BP and guidelines without questioning"',
+    '"I was too faithful to the rules and BP set by GM — breaking the rules was considered the greatest wrong"',
+    '"My biggest regret would be relying too heavily on standards and processes, which slowed down execution"',
+    '"My biggest regret would be not moving earlier and more boldly to build a culture of challenge"',
+    '"I would regret having accepted limitations too easily and not encouraging teams to fail fast"',
+    '"I would tell myself to wake up and realize the old way is a plan to fail"'
+  ]},
+  'regret-people': { head: 'Did not develop & bring people along — 8 of 30 Part 2 responses (27%)', quotes: [
+    '"My biggest regret would be not speaking up earlier about the human side of change"',
+    '"I hesitated to help set up a bold mindset in younger employees"',
+    '"I regret not being able to fully engage and convince less proactive engineers"',
+    '"The part where we were unable to lead all members of the organization and change together"',
+    '"People have more potential than we often realize and leadership is about creating conditions for that potential to grow"'
+  ]},
+  'regret-capability': { head: 'Did not build future technical capability — 5 of 30 Part 2 responses (17%)', quotes: [
+    '"I would regret not having enough time studying advanced technology — we are too focused on current technology"',
+    '"That I did not spend enough time going deep on the capabilities of artificial intelligence"',
+    '"My biggest regret would be not pushing for future-focused investment and new technology development"',
+    '"I regret not having learned more technology and having challenged the team more"',
+    '"Not getting prepared and learning the tools my company offered to be a better skilled leader/engineer"'
+  ]},
+  'blocker-1': { head: 'Daily pressure & firefighting — raw evidence', quotes: [
+    '"What prevented me was pressure of immediate work and belief that people would eventually adapt"',
+    '"pressure of immediate deliverables and limited time"',
+    '"being consumed by issues of the moment instead of stepping out to think about strategy"',
+    '"We are too focused on daily tasks rather than seeing the future"',
+    '"balancing short-term results over long-term capability building"'
+  ]},
+  'blocker-2': { head: 'Fear of failure without safety net — raw evidence', quotes: [
+    '"I was concerned about how I might be perceived by leadership"',
+    '"In comfort zone within inertia and avoided risks"',
+    '"Breaking the rules was considered the greatest wrong"',
+    '"My bias and lack of varied approaches limited change"',
+    '"(what leaders like) Freedom to think and act differently without fear, appreciation for brilliant failures"'
+  ]},
+  'blocker-3': { head: 'Budget constraints — raw evidence', quotes: [
+    '"limited flexibility, budget difficulty, and a culture too focused on process"',
+    '"Lack of leadership support due to global financial environment"',
+    '"Difficult budget execution, Too much approval process, Less flexibility"'
+  ]},
+  'blocker-4': { head: 'Insufficient leadership support — raw evidence', quotes: [
+    '"We need continuous communication and leaders who support and enable their teams"',
+    '"Lack of leadership support due to global financial environment"',
+    '"Culture where Brian has a strong influence on all policy decisions"',
+    '"Senior leadership feels lacks personal connection with employees"'
+  ]},
+  'blocker-5': { head: 'Micro-management culture — raw evidence', quotes: [
+    '"There is a bias towards micro-management rather than empowerment preventing leaders from managing their teams as they see fit"',
+    '"The volume and level of CAP goals and tracking is an example of system-level friction"',
+    '"Not enough empowerment"',
+    '"Decisions still feel top-down"'
+  ]},
+  'blocker-6': { head: 'Lack of psychological safety — raw evidence', quotes: [
+    '"(what leaders like) Freedom to think and act differently without fear, appreciation for brilliant failures"',
+    '"I was concerned about how I might be perceived by leadership"',
+    '"Hesitation to speak up — people complain rather than seeing bright side of the efforts"',
+    '"Breaking the hierarchical mindset — give people the trust to respect leaders based on behaviors, not levels"'
+  ]}
+};
+
+(function() {
+  // Create tooltip element
+  const tt = document.createElement('div');
+  tt.id = '_lvTipEl';
+  tt.style.cssText = 'position:fixed;z-index:9998;pointer-events:auto;'
+    + 'background:var(--card2);border:0.5px solid var(--border2);border-radius:var(--radius-lg);'
+    + 'padding:14px 16px;min-width:310px;max-width:400px;'
+    + 'box-shadow:0 24px 60px rgba(0,0,0,0.75);'
+    + 'opacity:0;transition:opacity 0.15s;display:none;';
+  document.body.appendChild(tt);
+
+  let _lvTimer;
+
+  function _lvShow(key, el) {
+    clearTimeout(_lvTimer);
+    const d = _LV_TIPS[key];
+    if (!d) return;
+    tt.innerHTML = `<div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--accent);letter-spacing:0.08em;margin-bottom:10px;">${d.head}</div>`
+      + d.quotes.map(q => `<div style="font-size:11px;color:var(--text2);line-height:1.6;padding:6px 10px;background:var(--bg3);border-radius:6px;margin-bottom:5px;">${q}</div>`).join('');
+    const r = el.getBoundingClientRect();
+    const w = 380;
+    let left = r.right + 14;
+    if (left + w > window.innerWidth - 12) left = r.left - w - 14;
+    let top = r.top - 8;
+    if (top + 450 > window.innerHeight) top = Math.max(8, window.innerHeight - 460);
+    tt.style.left = Math.max(8, left) + 'px';
+    tt.style.top = Math.max(8, top) + 'px';
+    tt.style.display = 'block';
+    requestAnimationFrame(() => { tt.style.opacity = '1'; });
+  }
+
+  function _lvScheduleHide() {
+    _lvTimer = setTimeout(() => {
+      tt.style.opacity = '0';
+      setTimeout(() => { tt.style.display = 'none'; }, 150);
+    }, 120);
+  }
+
+  // Tooltip stays visible when hovered
+  tt.addEventListener('mouseenter', () => clearTimeout(_lvTimer));
+  tt.addEventListener('mouseleave', _lvScheduleHide);
+
+  function _lvWire() {
+    document.querySelectorAll('[data-lv-tip]').forEach(el => {
+      if (el._lvWired) return;
+      el._lvWired = true;
+      el.style.cursor = 'default';
+      el.addEventListener('mouseenter', () => _lvShow(el.dataset.lvTip, el));
+      el.addEventListener('mouseleave', _lvScheduleHide);
+      // Subtle hover highlight
+      el.addEventListener('mouseenter', () => { el.style.background = 'rgba(255,255,255,0.03)'; });
+      el.addEventListener('mouseleave', () => { el.style.background = ''; });
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _lvWire);
+  else _lvWire();
+})();
+
+// ── AiO DOT MATRIX ──────────────────────────────────────────────────────────
+(function() {
+  const el = document.getElementById('aioDots');
+  if (!el) return;
+  for (let i = 0; i < 32; i++) {
+    const d = document.createElement('div');
+    const isCautious = i >= 27;
+    d.style.cssText = `width:13px;height:13px;border-radius:50%;flex-shrink:0;cursor:default;transition:transform 0.15s;`
+      + `background:${isCautious ? '#f59e0b' : '#14b8a6'};opacity:${isCautious ? 0.8 : 0.85};`;
+    d.title = isCautious ? '시스템 우려 — 비전은 공유하나 속도와 지원에 불안감' : '성장 비전 정렬 — 인재 성장 중심의 미래 공유';
+    d.onmouseenter = () => { d.style.transform = 'scale(1.35)'; d.style.opacity = '1'; };
+    d.onmouseleave = () => { d.style.transform = ''; d.style.opacity = isCautious ? '0.8' : '0.85'; };
+    el.appendChild(d);
+  }
+})();
+
+// ── REGRET DOT MATRIX ───────────────────────────────────────────────────────
+(function() {
+  const el = document.getElementById('regretDots');
+  if (!el) return;
+  const _dots = [
+    ...Array(13).fill({c:'#ef4444', t:'속도/규칙 (13명)'}),
+    ...Array(8).fill({c:'#f59e0b', t:'사람 개발 미흡 (8명)'}),
+    ...Array(5).fill({c:'#3b82f6', t:'미래 역량 투자 부족 (5명)'}),
+    ...Array(4).fill({c:'#4b5563', t:'구체적 후회 없음 — 일반 코멘트 (4명)'})
+  ];
+  _dots.forEach(({c, t}) => {
+    const d = document.createElement('div');
+    d.style.cssText = `width:10px;height:10px;border-radius:50%;flex-shrink:0;cursor:default;transition:transform 0.15s;background:${c};opacity:0.82;`;
+    d.title = t;
+    d.onmouseenter = () => { d.style.transform = 'scale(1.4)'; d.style.opacity = '1'; };
+    d.onmouseleave = () => { d.style.transform = ''; d.style.opacity = '0.82'; };
+    el.appendChild(d);
+  });
+})();
+
+// ── THEME TOOLTIP (Culture Snapshot hover) ──────────────────────────────────
+const _THEME_QUOTES = {
+  // Q1 — What leaders LIKE
+  'Teamwork & collaboration': [
+    "Smaller collaborative team",
+    "Collaboration & challenge",
+    "Cooperation in Common Goals — Team",
+    "Horizontal communication and Safety First Culture",
+    "Strong ownership and teamwork",
+    "Good teamwork, High responsibility"
+  ],
+  'Safety-first culture': [
+    "Safety First !! I like the passion, responsibility, and commitment of TCK people.",
+    "Strong safety mindset, People care about safety first, Open communication",
+    "Horizontal communication and Safety First Culture"
+  ],
+  'Ownership mindset': [
+    "Strong ownership mindset",
+    "Sense of Responsibility",
+    "Strong ownership and teamwork",
+    "Be accountable for what GMTCK has to achieve and contribute to collectively",
+    "Responsibility"
+  ],
+  'Flat hierarchy': [
+    "Less hierarchy compared to other companies in Korea and offers flexibility and individual discretion.",
+    "Horizontal communication and Safety First Culture",
+    "Eastern and Western cultures are well balanced — not so much a Korean class culture, but rather a somewhat rational conversation"
+  ],
+  'Execution commitment': [
+    "There is a strong willingness to execute based on the intent to develop vehicles effectively.",
+    "Commitment to deliver the result",
+    "Execution mindset",
+    "Our teams are dedicated. We value hard work, fast action and have pride in our work."
+  ],
+  'East-West balance': [
+    "Eastern and Western cultures are well balanced. It's not so much a Korean class culture as possible, but rather a somewhat rational conversation",
+    "Diverse, Challenge, Respect, Volunteer"
+  ],
+  // Q2 — What leaders DISLIKE
+  'Speed over quality': [
+    "We have a keen ability to move quickly, but our culture tends to be one of speed above all. Deadlines are often short and urgent, resulting in outputs that feel compromised or short-sighted to meet timing.",
+    "The speed of change is not consistent",
+    "There is an internalized concern about sustaining efforts, stemming from the perception that we are lagging behind our competitors."
+  ],
+  'Meeting overload': [
+    "Too many extra activities",
+    "A high number of meetings and activities that limit focus on core work, along with low voluntary engagement and contribution.",
+    "Too many unrelated goals, leading to loss of focus, time and productivity.",
+    "The large number of culture change initiatives appears to be reducing the perceived importance of core work."
+  ],
+  'Silo thinking': [
+    "Resource silos",
+    "Resource gap and Silo thinking.",
+    "Selfishness"
+  ],
+  'Resistance to change': [
+    "Some people avoid change and hold things back. They complain rather than seeing bright side of the efforts.",
+    "Slow to adapt to changes",
+    "Many people are staying behind the labor union to be in the comfort zone"
+  ],
+  'Top-down decisions': [
+    "Culture where Brian has a strong influence on all policy decisions.",
+    "Some decisions are made by a small group of people, and at times these decisions run counter to the thoughts and opinions of the majority of employees.",
+    "Not enough empowerment"
+  ],
+  'Lack of clarity from leadership': [
+    "TCK asks people to change quickly, but leadership does not always give them enough clarity, time, or support",
+    "When started here, I thought that some communication was not totally transparent and good to convince the entire people towards to the same direction.",
+    "Too many procedures, Slow decision making, Too much approval process, Less flexibility"
+  ],
+  // Q3 — What's MISSING
+  'Trust & honest dialogue': [
+    "More trust and honest communication.",
+    "We need more trust, more honest communication, and more visible support for people who are struggling with change",
+    "Lack of trust",
+    "Breaking the hierarchical mindset, give people the trust to respect leaders based on their behaviors and actions, not because of their levels or words"
+  ],
+  'The "WHY" of change': [
+    "The 'WHY' is lacking.",
+    "Not enough clarity and transparency",
+    "Ability to deal with ambiguity",
+    "each challenging action requires a clear purpose — without that it is plain to fail."
+  ],
+  'Real empowerment': [
+    "Empowerment. There is a bias towards micro-management rather than empowerment preventing leaders from managing their teams as they see fit. The volume and level of CAP goals and tracking is an example.",
+    "Decisions still feel top-down",
+    "Micro-management rather than empowerment prevents leaders from managing their teams"
+  ],
+  'Company pride': [
+    "Pride in working at TCK!! We need more trust, more honest communication, and more visible support",
+    "Lack of pride about company.",
+    "We lack self belief",
+    "The virtue of humility may be our weakness. We are not good at promotion of ourselves."
+  ],
+  'Future investment': [
+    "More investment for the next 5 years, More focus on future business, More new technology development, More long-term planning",
+    "How to balance our multi-function future engineer with not losing expertise in crucial subjects."
+  ],
+  'Shared ownership mindset': [
+    "Broader shared belief in AiO and future capability building",
+    "Sense of ownership",
+    "Keep continuing to connect our vision to the daily work",
+    "The power of Collective intelligence gets overlooked from time to time"
+  ]
+};
+
+// Attach data to theme-items and wire up tooltip
+(function() {
+  document.querySelectorAll('#page-part1 .theme-item').forEach(item => {
+    const nameEl = item.querySelector('.theme-name');
+    if (!nameEl) return;
+    const key = nameEl.textContent.trim();
+    if (_THEME_QUOTES[key]) {
+      item.dataset.hasQuotes = '1';
+      item.dataset.themeKey = key;
+    }
+  });
+
+  const tt = document.createElement('div');
+  tt.id = 'themeTooltip';
+  document.body.appendChild(tt);
+
+  let _ttTimer;
+  document.addEventListener('mouseover', function(e) {
+    const item = e.target.closest('.theme-item[data-has-quotes]');
+    if (!item) return;
+    clearTimeout(_ttTimer);
+    const key = item.dataset.themeKey;
+    const quotes = _THEME_QUOTES[key] || [];
+    tt.innerHTML = `<div class="tt-head">${quotes.length}개 응답이 이 테마에 해당</div>`
+      + quotes.map(q => `<div class="tt-q">"${q}"</div>`).join('');
+
+    const r = item.getBoundingClientRect();
+    const ttW = 360;
+    let left = r.right + 14;
+    if (left + ttW > window.innerWidth - 12) left = r.left - ttW - 14;
+    let top = r.top - 10;
+    tt.style.left = Math.max(8, left) + 'px';
+    tt.style.top = Math.max(8, top) + 'px';
+    tt.classList.add('tt-visible');
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    const item = e.target.closest('.theme-item[data-has-quotes]');
+    if (!item) { clearTimeout(_ttTimer); _ttTimer = setTimeout(() => tt.classList.remove('tt-visible'), 80); }
+  });
+
+  document.addEventListener('mouseout', function(e) {
+    const item = e.target.closest('.theme-item[data-has-quotes]');
+    if (item && !item.contains(e.relatedTarget)) {
+      clearTimeout(_ttTimer);
+      _ttTimer = setTimeout(() => tt.classList.remove('tt-visible'), 80);
+    }
+  });
+})();
+</script>
+</body>
+</html>
