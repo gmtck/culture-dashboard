@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// TCK Culture Pulse — Survey Data
-// Wave 1 · Jun 2026 · 34 respondents
+// TCK Culture Survey Dashboard — Survey Data
+// Jun 2026 · 35 respondents
 // Update this file for each new wave; the dashboard HTML reads from here.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -39,7 +39,8 @@ const surveyQ1 = [
   "Everybody",
   "Able to participate in many different things",
   "Relentless focus on improving performance and workplace culture",
-  "Openness to change"
+  "Openness to change",
+  "I like that we have clear 5 core elements that we work on, we do things rather than accepting status quo."
 ];
 
 // Part 1 — Q2: What DON'T you like about TCK's culture as of today?
@@ -77,7 +78,8 @@ const surveyQ2 = [
   "Need to focus in core activity",
   "Too much of my time outside of work is taken away. Yet my regular workload is not reduced — the work stays the same while side tasks keep increasing.",
   "Leadership-driven, top-down communication style with a reliance on 'Brian said' direction",
-  "Disconnect between levels"
+  "Disconnect between levels",
+  "I do not like to have long (ALL DAY) workshops, the leaner, faster updates, the better."
 ];
 
 // Part 1 — Q3: What is LACKING or MISSING about TCK's culture as of today?
@@ -115,7 +117,8 @@ const surveyQ3 = [
   "Good",
   "The logic that leaders or we ourselves must do everything.",
   "Bridge connecting leadership with employees at all levels",
-  "Time to absorb change"
+  "Time to absorb change",
+  "Connect more between core elements"
 ];
 
 // Part 1 — theme mention counts (keyword match; a response may appear in multiple themes)
@@ -125,12 +128,12 @@ const _PART1_THEME_MENTIONS = {
     'Safety-first culture': [10, 19, 24],
     'Ownership mindset': [10, 11, 15, 19, 21, 27, 29],
     'Flat hierarchy': [3, 9, 24],
-    'Execution commitment': [4, 5, 8, 12, 13, 17, 18, 25, 28, 32],
+    'Execution commitment': [4, 5, 8, 12, 13, 17, 18, 25, 28, 32, 34],
     'East-West balance': [20],
   },
   q2: {
     'Speed over quality': [4, 17, 22, 27, 28],
-    'Meeting overload': [0, 3, 9, 12, 30, 31],
+    'Meeting overload': [0, 3, 9, 12, 30, 31, 34],
     'Silo thinking': [7, 14, 24],
     'Resistance to change': [1, 2, 8, 13, 21],
     'Top-down decisions': [6, 10, 11, 18, 20, 32],
@@ -142,7 +145,7 @@ const _PART1_THEME_MENTIONS = {
     'Real empowerment': [6, 17, 18, 31],
     'Company pride': [4, 10, 14, 20, 23, 25],
     'Future investment': [5, 19, 33],
-    'Shared ownership mindset': [13, 21, 24, 26, 27, 28, 29],
+    'Shared ownership mindset': [13, 21, 24, 26, 27, 28, 29, 34],
   },
 };
 
@@ -153,12 +156,12 @@ const _PART1_THEME_INDICES = {
     'Safety-first culture': [10, 19, 24],
     'Ownership mindset': [11, 15, 21, 22, 27, 29],
     'Flat hierarchy': [3, 9],
-    'Execution commitment': [4, 8, 12, 13, 17, 18, 26, 28, 32],
+    'Execution commitment': [4, 8, 12, 13, 17, 18, 26, 28, 32, 34],
     'East-West balance': [20],
   },
   q2: {
     'Speed over quality': [4, 15, 17, 22, 27, 28],
-    'Meeting overload': [0, 3, 9, 12, 30, 31],
+    'Meeting overload': [0, 3, 9, 12, 30, 31, 34],
     'Silo thinking': [7, 14, 24],
     'Resistance to change': [1, 2, 8, 13, 21],
     'Top-down decisions': [6, 10, 11, 18, 20, 32],
@@ -170,7 +173,7 @@ const _PART1_THEME_INDICES = {
     'Real empowerment': [6, 17, 18, 31],
     'Company pride': [10, 14, 20, 23, 25],
     'Future investment': [5, 19, 33],
-    'Shared ownership mindset': [13, 21, 24, 26, 27, 28, 29],
+    'Shared ownership mindset': [13, 21, 24, 26, 27, 28, 29, 34],
   },
 };
 
@@ -209,7 +212,8 @@ const surveyPart2 = [
   "We need to learn how China is doing now better than other countries.",
   "Subject 1. I think the direction is right and good. But if what we are doing now is not right, we need to change the approach. If everything we are pushing now succeeds, positive results are expected. But we should not look only at what appears on the surface — we need to look inside. We need to understand employees' true feelings. Subject 2. I cannot imagine how far AI will be able to go in 10 years. I think we will soon no longer need to handle UG directly. I believe the day is not far off when AI will draw UG math if we only provide conditions such as sections and material thickness. But I want to answer 'no' to the question of whether the many things we are doing now align with that. An R&D company should focus on R&D. What are world-class companies like NVIDIA and Apple doing?",
   "S1: I'd be most proud to say we moved from role-based work to a growth mindset, empowering people to continuously expand their skills and confidence. S2: My biggest regret would be not challenging the top-down culture and traditional ways of working earlier and more assertively. Hierarchy, risk aversion, and over-prioritizing alignment held me back; a more open, trust-based culture that truly encourages speaking up would have removed that barrier.",
-  "Subject 1: In today's fast-changing automotive industry, where new technologies are coming out all the time, I believe this effort can help TCK become more flexible and better prepared to respond to change and new challenges. I hope I can say that I kept an open mindset and tried new things, instead of staying within boundaries. Subject 2: Looking back, my biggest regret would be that I was not bold enough to try more and challenge myself. I would tell my younger self to start earlier, do my best, and even if I fail, try again until I succeed. What stopped me was fear and hesitation — thinking 'What if I am wrong?' or 'What if I fail?' Instead of waiting for change, I should have gone after it."
+  "Subject 1: In today's fast-changing automotive industry, where new technologies are coming out all the time, I believe this effort can help TCK become more flexible and better prepared to respond to change and new challenges. I hope I can say that I kept an open mindset and tried new things, instead of staying within boundaries. Subject 2: Looking back, my biggest regret would be that I was not bold enough to try more and challenge myself. I would tell my younger self to start earlier, do my best, and even if I fail, try again until I succeed. What stopped me was fear and hesitation — thinking 'What if I am wrong?' or 'What if I fail?' Instead of waiting for change, I should have gone after it.",
+  "Subject 1) The evolution into AIO will enable TCK to do more, faster, quicker and with more quality output our future portfolio, I want to be proud of have the FIRST OVERALL technical Centre for GM to achieve this transformation. Subject 2) Regret to be a nice person, not a better leader while challenging others. For being a good leader I needed to learn how to move others better."
 ];
 
 // Part 3 — Personal mantra: why YOU believe it is worth caring about AiO and innovation
@@ -247,28 +251,29 @@ const surveyPart3 = [
   "Be flexible to new tech",
   "Even when there are parts I don't like, I love our company. If the direction the company is pursuing is right, we shouldn't use negative energy that undermines the overall effort — we should join positively while sharing opinions on what needs improvement. I strongly support building an AiO / Innovation mindset. But the current approach to pushing it forward needs to be reconsidered.",
   "No growth, no future.",
-  "Don't wait for change — go after it. Keep learning and growing, because this is a mindset that matters anywhere, not just here."
+  "Don't wait for change — go after it. Keep learning and growing, because this is a mindset that matters anywhere, not just here.",
+  "We are here to be first, not to be second, we win together or learn together."
 ];
 
 // Theme → surveyPart2 respondent index mappings
 // Vision = S1 content, Regret = S2 content
 const _THEME_INDICES = {
-  // 27 of 34 mention people gaining broader freedom / not constrained by narrow roles
+  // 27 of 35 mention people gaining broader freedom / not constrained by narrow roles
   'vision-1': [0,1,2,3,4,5,7,9,10,11,12,13,16,17,18,19,20,21,22,24,25,26,27,28,29,32,33],
-  // 24 of 34 explicitly reference investing in people's learning / upskilling culture
+  // 24 of 35 explicitly reference investing in people's learning / upskilling culture
   'vision-2': [0,1,2,4,5,9,10,11,13,16,17,18,19,20,22,23,24,25,26,27,28,29,32,33],
-  // 23 of 34 mention speed, agility, cross-boundary problem solving
-  'vision-3': [0,1,2,3,4,7,10,11,12,13,16,17,18,19,21,22,24,26,27,28,29,32,33],
-  // 20 of 34 explicitly name TCK as most valued / competitive reference in GM
-  'vision-4': [0,1,3,4,7,8,11,12,13,14,16,17,18,19,21,22,24,26,27,29],
-  // 17 of 34 explicitly mention virtual/software/AI capability transformation
+  // 24 of 35 mention speed, agility, cross-boundary problem solving
+  'vision-3': [0,1,2,3,4,7,10,11,12,13,16,17,18,19,21,22,24,26,27,28,29,32,33,34],
+  // 21 of 35 explicitly name TCK as most valued / competitive reference in GM
+  'vision-4': [0,1,3,4,7,8,11,12,13,14,16,17,18,19,21,22,24,26,27,29,34],
+  // 17 of 35 explicitly mention virtual/software/AI capability transformation
   'vision-5': [2,3,4,5,7,14,16,17,18,19,23,25,26,28,29,31,33],
-  // S2 regret — 14 of 34: moved too slowly, rule-bound, stayed in comfort zone
+  // S2 regret — 14 of 35: moved too slowly, rule-bound, stayed in comfort zone
   'regret-speed': [3,11,12,13,14,17,18,21,22,24,27,28,32,33],
-  // S2 regret — 9 of 34: did not develop or bring people along
-  'regret-people': [1,2,4,6,7,8,10,20,26],
-  // S2 regret — 7 of 34: did not build future technical capability
+  // S2 regret — 10 of 35: did not develop or bring people along
+  'regret-people': [1,2,4,6,7,8,10,20,26,34],
+  // S2 regret — 7 of 35: did not build future technical capability
   'regret-capability': [0,5,16,19,23,29,31],
-  // S2 regret — 4 of 34: no clear S2 / etc.
+  // S2 regret — 4 of 35: no clear S2 / etc.
   'regret-general': [9,15,25,30],
 };
