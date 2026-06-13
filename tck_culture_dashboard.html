@@ -2725,7 +2725,7 @@ const _LV_TIPS = {
     _openLvModal(btn.dataset.openModal);
   });
 
-  function _lvShow(key, el) {
+  function _lvShow(key, el, mx, my) {
     clearTimeout(_lvTimer);
     const d = _LV_TIPS[key];
     if (!d) return;
@@ -2736,30 +2736,24 @@ const _LV_TIPS = {
     tt.innerHTML = `<div style="font-size:10px;font-family:'DM Sans',sans-serif;color:var(--accent);letter-spacing:0.08em;margin-bottom:8px;">${d.head}</div>`
       + d.quotes.slice(0, 6).map(q => `<div style="font-size:11px;color:var(--text2);line-height:1.55;padding:5px 9px;background:var(--bg3);border-radius:5px;margin-bottom:4px;">${q}</div>`).join('')
       + expandBtn;
-    const r = el.getBoundingClientRect();
-    const isPart2 = !!el.closest('#page-part2');
-    const isOverviewPage = !!el.closest('#page-overview');
     tt.style.display = 'block';
     tt.style.visibility = 'hidden';
     const ttW = tt.offsetWidth;
     const ttH = tt.offsetHeight;
     tt.style.visibility = '';
-    let left, top;
-    if (isOverviewPage) {
-      left = (window.innerWidth - ttW) / 2;
-      top = Math.max(72, (window.innerHeight - ttH) / 2);
-    } else if (isPart2) {
-      left = (window.innerWidth - ttW) / 2 + 72;
-      top = Math.max(16, Math.min(r.top - 8, window.innerHeight - ttH - 16));
-      if (top + ttH > window.innerHeight - 16) top = Math.max(16, (window.innerHeight - ttH) / 2);
-    } else {
-      left = r.right + 14;
-      if (left + ttW > window.innerWidth - 12) left = r.left - ttW - 14;
-      left = Math.max(12, Math.min(left, window.innerWidth - ttW - 12));
-      top = r.top - 8;
-      if (top + ttH > window.innerHeight - 12) top = Math.max(8, window.innerHeight - ttH - 12);
-    }
-    left = Math.max(12, Math.min(left, window.innerWidth - ttW - 12));
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const gap = 16, pad = 12;
+    // Use mouse position if available, else fall back to element rect
+    const cx = mx ?? el.getBoundingClientRect().left + el.getBoundingClientRect().width / 2;
+    const cy = my ?? el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2;
+    // Prefer right of cursor; flip to left if it overflows
+    let left = cx + gap;
+    if (left + ttW > vw - pad) left = cx - ttW - gap;
+    left = Math.max(pad, Math.min(left, vw - ttW - pad));
+    // Align tooltip top near cursor; nudge up if it clips bottom
+    let top = cy - 12;
+    if (top + ttH > vh - pad) top = vh - ttH - pad;
+    if (top < pad) top = pad;
     tt.style.left = left + 'px';
     tt.style.top = top + 'px';
     requestAnimationFrame(() => { tt.style.opacity = '1'; });
@@ -2784,7 +2778,7 @@ const _LV_TIPS = {
       const isOverview = !!el.closest('#page-overview');
       const hasData = _LV_TIPS[key] && _LV_TIPS[key].quotes && _LV_TIPS[key].quotes.length;
       el.style.cursor = hasData && !isOverview ? 'pointer' : 'default';
-      el.addEventListener('mouseenter', () => _lvShow(key, el));
+      el.addEventListener('mouseenter', (e) => _lvShow(key, el, e.clientX, e.clientY));
       el.addEventListener('mouseleave', _lvScheduleHide);
       el.addEventListener('mouseenter', () => { el.style.background = 'rgba(255,255,255,0.03)'; });
       el.addEventListener('mouseleave', () => { el.style.background = ''; });
