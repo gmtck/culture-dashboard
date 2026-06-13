@@ -367,6 +367,13 @@ body {
   padding: 7px 12px; background: var(--bg3); border-radius: 6px; margin-bottom: 7px;
 }
 #themeTooltip .tt-q:last-child { margin-bottom: 0; }
+
+
+
+/* GM BENCHMARK TOGGLE */
+._gb-toggle-btn { padding:6px 14px;font-size:11px;font-family:'DM Sans',sans-serif;background:var(--card2);color:var(--text2);border:0.5px solid var(--border);border-radius:20px;cursor:pointer;transition:all 0.15s; }
+._gb-toggle-btn._gb-toggle-active { background:var(--accent);color:#fff;border-color:var(--accent); }
+
 </style>
 </head>
 <body>
@@ -386,6 +393,7 @@ body {
     <button data-tck onclick="showPage('part1')">Part 1</button>
     <button data-tck onclick="showPage('part2')">Part 2</button>
     <button data-tck onclick="showPage('actions')">Part 3</button>
+    <button data-tck onclick="showPage('gmbench')">Part 4</button>
   </div>
   <div class="surveys-nav-wrap" id="surveysNavWrap">
     <button onclick="_toggleSurveysDropdown(event)" id="surveysNavBtn">My Surveys ▾</button>
@@ -415,7 +423,7 @@ body {
     </div>
     <div style="padding:12px 20px;border-right:0.5px solid var(--border);">
       <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:4px;letter-spacing:0.08em;text-transform:uppercase;">Respondents</div>
-      <div style="font-size:13px;font-weight:500;color:var(--text);">34 <span style="color:var(--text3);font-weight:400;">/ 35</span> <span style="font-size:11px;color:var(--green);font-family:'DM Sans',sans-serif;margin-left:4px;">97%</span></div>
+      <div style="font-size:13px;font-weight:500;color:var(--text);">35 <span style="color:var(--text3);font-weight:400;">/ 35</span> <span style="font-size:11px;color:var(--green);font-family:'DM Sans',sans-serif;margin-left:4px;">100%</span></div>
     </div>
     <div style="padding:12px 20px;border-right:0.5px solid var(--border);">
       <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:4px;letter-spacing:0.08em;text-transform:uppercase;">Audience</div>
@@ -486,7 +494,7 @@ body {
       <div class="action-num">1</div>
       <div class="action-body">
         <div class="action-title">Make the WHY visible — consistently and repetitively</div>
-        <div class="action-desc">The most cited gap across all 34 responses. Leaders can't translate culture change to their teams because the purpose isn't emotionally compelling or frequently reinforced. Leadership needs to communicate meaning, not just mechanics — in every forum, every week.</div>
+        <div class="action-desc">The most cited gap across all 35 responses. Leaders can't translate culture change to their teams because the purpose isn't emotionally compelling or frequently reinforced. Leadership needs to communicate meaning, not just mechanics — in every forum, every week.</div>
       </div>
     </div>
     <div class="action-item">
@@ -521,7 +529,7 @@ body {
   <div class="sec-header" style="margin-top:1rem;">
     <div class="sec-title">Part 1</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Culture Snapshot · Q1–Q3 · 34 responses</div>
+    <div class="sec-tag">Culture Snapshot · Q1–Q3 · 35 responses</div>
   </div>
 
   <div class="survey-q-box survey-q-box--amber" style="margin-bottom:1.5rem;">
@@ -572,7 +580,7 @@ body {
   </div>
 
   <div class="sec-header">
-    <div class="sec-title">Voice of 34 Leaders</div>
+    <div class="sec-title">Voice of 35 Leaders</div>
     <div class="sec-line"></div>
     <div class="sec-tag">Size = mention frequency &nbsp;·&nbsp; Color = question group</div>
   </div>
@@ -594,7 +602,7 @@ body {
   <div class="sec-header" style="margin-top:1rem;">
     <div class="sec-title">Part 2</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Personal Reflections · Subject 1 &amp; 2 · 34 responses</div>
+    <div class="sec-tag">Personal Reflections · Subject 1 &amp; 2 · 35 responses</div>
   </div>
 
   <div class="survey-q-box survey-q-box--teal" style="margin-bottom:1.5rem;">
@@ -625,13 +633,13 @@ body {
   <div class="card" style="margin-bottom:1.5rem;padding:20px 22px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;">
       <div style="flex:1;min-width:220px;">
-        <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">VISION THEMES — mention frequency out of 34</div>
+        <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">VISION THEMES — mention frequency out of 35</div>
         <div style="display:flex;flex-direction:column;gap:9px;">
-          <div data-lv-tip="vision-1" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">People freed from limitation</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">27 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:79%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="vision-2" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Culture of genuine growth investment</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">24 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:71%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="vision-3" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Faster cross-boundary problem solving</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">23 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:68%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="vision-4" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">TCK as most valued center in GM</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">20 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:59%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="vision-5" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Engineers reinvented physical → virtual</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">17 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:50%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-1" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">People freed from limitation</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">27 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:77%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-2" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Culture of genuine growth investment</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">24 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:69%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-3" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Faster cross-boundary problem solving</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">24 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:69%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-4" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">TCK as most valued center in GM</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">21 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:60%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="vision-5" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Engineers reinvented physical → virtual</span><span style="font-size:11px;font-family:'DM Sans', sans-serif;color:var(--teal);">17 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:49%;height:100%;background:var(--teal);border-radius:3px;"></div></div></div>
         </div>
       </div>
     </div>
@@ -681,12 +689,12 @@ body {
   <div class="card" style="margin-bottom:1.5rem;padding:20px 22px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;">
       <div style="flex:1;min-width:220px;">
-        <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">REGRET THEMES — converged from 31 of 34 responses</div>
+        <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--text3);letter-spacing:0.1em;margin-bottom:14px;">REGRET THEMES — converged from 35 of 35 responses</div>
         <div style="display:flex;flex-direction:column;gap:9px;">
-          <div data-lv-tip="regret-speed" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Moved too slowly — bound by rules &amp; comfort zone</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--red);">15 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:44%;height:100%;background:var(--red);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="regret-people" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not develop &amp; bring people along</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--amber);">9 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:26%;height:100%;background:var(--amber);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="regret-capability" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not build future technical capability</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--blue);">7 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:21%;height:100%;background:var(--blue);border-radius:3px;"></div></div></div>
-          <div data-lv-tip="regret-general" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;cursor:default;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text3);">Etc.</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">3 / 34</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:9%;height:100%;background:var(--border2);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-speed" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Moved too slowly — bound by rules &amp; comfort zone</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--red);">14 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:40%;height:100%;background:var(--red);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-people" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not develop &amp; bring people along</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--amber);">10 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:29%;height:100%;background:var(--amber);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-capability" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text2);">Did not build future technical capability</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--blue);">7 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:20%;height:100%;background:var(--blue);border-radius:3px;"></div></div></div>
+          <div data-lv-tip="regret-general" style="padding:4px 6px;border-radius:5px;transition:background 0.15s;cursor:default;"><div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:12px;color:var(--text3);">Etc.</span><span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">4 / 35</span></div><div style="background:var(--bg3);border-radius:3px;height:5px;"><div style="width:11%;height:100%;background:var(--border2);border-radius:3px;"></div></div></div>
         </div>
       </div>
     </div>
@@ -694,8 +702,8 @@ body {
 
   <div class="grid-2" style="margin-bottom:1rem;">
     <div class="card">
-      <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--red);letter-spacing:0.1em;margin-bottom:12px;">THE DOMINANT REGRET — 50% OF ALL VOICES</div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;">Half of all leaders would tell their younger self the same thing: <strong style="color:var(--text);">you were too careful, too faithful to the rules, too slow.</strong> The regret isn't about the wrong direction — it's about accepting the pace the system set instead of demanding more.</div>
+      <div style="font-size:10px;font-family:'DM Sans', sans-serif;color:var(--red);letter-spacing:0.1em;margin-bottom:12px;">THE DOMINANT REGRET — 40% OF ALL VOICES</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;">4 in 10 leaders would tell their younger self the same thing: <strong style="color:var(--text);">you were too careful, too faithful to the rules, too slow.</strong> The regret isn't about the wrong direction — it's about accepting the pace the system set instead of demanding more.</div>
       <div class="quote-item q-red" style="margin-bottom:6px;">"Just followed blindly the BP and guidelines without questioning"</div>
       <div class="quote-item q-red" style="margin-bottom:6px;">"My biggest regret would be relying too heavily on standards and processes — it slowed down execution"</div>
       <div class="quote-item q-red">"I would tell myself to wake up and realize the old way is a plan to fail"</div>
@@ -787,7 +795,7 @@ body {
   <div class="sec-header" style="margin-top:1rem;">
     <div class="sec-title">Part 3</div>
     <div class="sec-line"></div>
-    <div class="sec-tag">Personal Mantra · 34 responses</div>
+    <div class="sec-tag">Personal Mantra · 35 responses</div>
   </div>
 
   <div class="survey-q-box survey-q-box--purple" style="margin-bottom:1.5rem;">
@@ -799,7 +807,7 @@ body {
 
   <!-- WORD CLOUD -->
   <div class="card" style="margin-bottom:1.5rem;">
-    <div class="card-title">Mantra themes — word frequency across 34 responses</div>
+    <div class="card-title">Mantra themes — word frequency across 35 responses</div>
     <div id="mantrasWordCloud" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 20px;min-height:200px;padding:12px 0;"></div>
     <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border);">
       <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;"></span>Mindset &amp; Movement</div>
@@ -809,7 +817,7 @@ body {
   </div>
 
   <!-- ALL 34 MANTRAS -->
-  <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">All 34 responses — unfiltered</div>
+  <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">All 35 responses — unfiltered</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-bottom:2rem;">
     <div class="mantra-card">"We must find ways of executing work more efficiently by leveraging the tools at our disposal so we can make time to innovate."</div>
     <div class="mantra-card">"This is an essential and non-negotiable foundational capability for us to keep learning, grow beyond our current roles, and through continuous challenge become an organization that not only adapts to change, but leads it."</div>
@@ -845,6 +853,7 @@ body {
     <div class="mantra-card">"Even when there are parts I don't like, I love our company. If the direction the company is pursuing is right, we shouldn't use negative energy that undermines the overall effort — we should join positively while sharing opinions on what needs improvement. I strongly support the AiO / Innovation mindset. But the current approach to pushing it forward needs to be reconsidered."</div>
     <div class="mantra-card">"No growth, no future."</div>
     <div class="mantra-card">"Don't wait for change — go after it. Keep learning and growing, because this is a mindset that matters anywhere, not just here."</div>
+    <div class="mantra-card">"We are here to be first, not to be second, we win together or learn together."</div>
   </div>
 </div>
 
@@ -897,7 +906,7 @@ body {
       </div>
       <div style="text-align: right;">
         <div class="pill pill-green">Complete</div>
-        <div style="font-size: 12px; color: var(--text3); margin-top: 6px;">34 / 34 leaders responded</div>
+        <div style="font-size: 12px; color: var(--text3); margin-top: 6px;">35 / 35 leaders responded</div>
       </div>
     </div>
     <table class="compare-table">
@@ -1150,6 +1159,100 @@ body {
   <div class="insight-block ib-amber">
     <div class="insight-label">NOTE — File 1 MD Assignment Required</div>
     <div class="insight-text">The template (File 1) includes a blank "Functional Leader (MD)" column. Responses are currently anonymous — coordinate with the MD team to assign each respondent to the correct Functional Leader before distributing individual MD copies.</div>
+  </div>
+
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- PAGE: GM BENCHMARK -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-gmbench">
+
+  <div class="sec-header" style="margin-top:1rem;">
+    <div class="sec-title">Part 4</div>
+    <div class="sec-line"></div>
+    <div class="sec-tag">GM vs. Top 10 Global Companies · <span id="gmbench-meta-n">90</span> respondents</div>
+  </div>
+
+  <!-- GROUP TOGGLE -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;">
+    <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-right:4px;">Group:</span>
+    <button class="_gb-toggle-btn _gb-toggle-active" id="_gbt-all" onclick="_gbSetGroup('all')">All (90)</button>
+    <button class="_gb-toggle-btn" id="_gbt-pl" onclick="_gbSetGroup('pl')">People Leaders (59)</button>
+    <button class="_gb-toggle-btn" id="_gbt-npl" onclick="_gbSetGroup('npl')">Non-People Leaders (31)</button>
+  </div>
+
+  <!-- META + QUESTION -->
+  <div class="survey-q-box survey-q-box--purple" style="margin-bottom:1.5rem;">
+    <div style="display:flex;gap:20px;margin-bottom:14px;padding-bottom:12px;border-bottom:0.5px solid rgba(168,85,247,0.15);">
+      <div>
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;">Survey Date</div>
+        <div style="font-size:13px;font-weight:500;color:var(--text);">June 12, 2026</div>
+      </div>
+      <div style="width:0.5px;background:rgba(168,85,247,0.15);"></div>
+      <div>
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;">Respondents</div>
+        <div style="font-size:13px;font-weight:500;color:var(--text);"><span id="gmbench-meta-n2">90</span> <span style="color:var(--text3);font-weight:400;">responses</span></div>
+      </div>
+    </div>
+    <div class="survey-q-row" style="margin-bottom:12px;">
+      <span class="survey-q-label" style="color:var(--accent);">Q</span>
+      <span class="survey-q-text">For each of the 10 global companies below, rate how they compare to GM on each of GM's 9 core values.</span>
+    </div>
+    <div class="survey-q-list">
+      <div class="survey-q-row"><span class="survey-q-label" style="color:var(--red);">A</span><span class="survey-q-text">Better than GM</span></div>
+      <div class="survey-q-row"><span class="survey-q-label" style="color:var(--teal);">B</span><span class="survey-q-text">Worse than GM</span></div>
+    </div>
+  </div>
+
+  <!-- KEY INSIGHTS -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:1.5rem;">
+    <div style="background:var(--card);border:0.5px solid rgba(239,68,68,0.3);border-radius:var(--radius);padding:18px 20px;">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Biggest Gap</div>
+      <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px;">Agility & Innovation</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;">Tesla (97%), Samsung (95%), Amazon (88%) are seen as significantly more agile than GM. Innovation follows the same pattern — Tech leaders are pulling away.</div>
+    </div>
+    <div style="background:var(--card);border:0.5px solid rgba(20,184,166,0.3);border-radius:var(--radius);padding:18px 20px;">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">GM's Relative Strength</div>
+      <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px;">Integrity & Respect</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;">Integrity and Respect are the most competitive dimensions — no company exceeds 65%. GM is seen as a peer in these human-centered values.</div>
+    </div>
+    <div style="background:var(--card);border:0.5px solid rgba(124,106,255,0.3);border-radius:var(--radius);padding:18px 20px;">
+      <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--accent);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Diversity Standout</div>
+      <div style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px;">GM Leads on Diversity</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;">Diversity is the one value where GM outperforms or matches the field — Toyota (13%), Ford (19%) both trail GM significantly. Even Alphabet scores only 64%.</div>
+    </div>
+  </div>
+
+  <!-- COMPANY RANKING -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-title">Overall Company Ranking — Average % rated Better than GM across all 9 values</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;">Higher % = respondents see this company as outperforming GM on that dimension</div>
+    <div id="gmbench-ranking" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+
+  <!-- HEATMAP TABLE -->
+  <div class="card" style="margin-bottom:1.5rem;overflow-x:auto;">
+    <div class="card-title">Value × Company Heatmap — % Better than GM</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+      <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(239,68,68,0.38);display:inline-block;"></span>≥65% — Clearly better than GM</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(245,158,11,0.30);display:inline-block;"></span>52–64% — Slightly better than GM</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(20,184,166,0.13);display:inline-block;"></span>38–51% — Even</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(20,184,166,0.35);display:inline-block;"></span>&lt;38% — Worse than GM</span>
+    </div>
+    <div id="gmbench-heatmap" style="min-width:700px;"></div>
+  </div>
+
+  <!-- VALUE DETAIL -->
+  <div class="card" style="margin-bottom:2rem;">
+    <div class="card-title">Value Detail — Better vs. Worse count per company</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(239,68,68,0.3);display:inline-block;"></span>Better than GM (count)</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:2px;background:rgba(20,184,166,0.25);display:inline-block;"></span>Worse than GM (count)</span>
+    </div>
+    <div id="gmbench-detail" style="display:flex;flex-direction:column;gap:0;"></div>
   </div>
 
 </div>
@@ -2032,7 +2135,7 @@ function showPage(id) {
     b.classList.toggle('active', oc.includes("'" + id + "'") || dp === id);
   });
   // Update topbar title + show/hide TCK-only nav buttons
-  const _tckPages = ['overview','part1','part2','actions','waves','analyzer','sectionb'];
+  const _tckPages = ['overview','part1','part2','actions','waves','analyzer','sectionb','gmbench'];
   const _isTCK = _tckPages.includes(id);
   document.querySelectorAll('.topbar-nav [data-tck]').forEach(b => {
     b.style.display = _isTCK ? '' : 'none';
@@ -2122,7 +2225,7 @@ const defaults = {
 // ── PART 3 MANTRA WORD CLOUD ─────────────────────────────────────────────────
 (function() {
   const _MW = [
-    // Mindset & Movement (purple) — size by frequency across 34 responses
+    // Mindset & Movement (purple) — size by frequency across 35 responses
     {w:'Change',        s:5, g:'m'}, {w:'Learn',          s:4, g:'m'},
     {w:'Grow',          s:4, g:'m'}, {w:'Adapt',          s:3, g:'m'},
     {w:'Upskilling',    s:3, g:'m'}, {w:'Mindset',        s:2, g:'m'},
@@ -2163,7 +2266,7 @@ const defaults = {
 // Radar chart — with external HTML tooltip
 const _radarTipData = [
   { label: 'Direction Alignment', score: '78%', color: '#22c55e',
-    insight: '22 of 34 leaders showed strong directional convergence — the destination is shared.',
+    insight: '23 of 35 leaders showed strong directional convergence — the destination is shared.',
     quotes: [
       '"Become the most valued engineering center in GM"',
       '"Take broader leadership in global engineering and make direct impact"',
@@ -2445,7 +2548,7 @@ function _syncPart2ThemeCounts() {
 
 // ── LEADERSHIP VOICES — UNIVERSAL HOVER TOOLTIP ─────────────────────────────
 const _LV_TIPS = {
-  'vision-1': { head: 'People freed from limitation — 27/34 responses', quotes: [
+  'vision-1': { head: 'People freed from limitation — 27/35 responses', quotes: [
     '"a culture where people became stronger because the organization truly invested in their growth"',
     '"helping open people\'s potential beyond the boundaries of their current roles"',
     '"we built a team where everyone stepped up and learned new skills"',
@@ -2453,7 +2556,7 @@ const _LV_TIPS = {
     '"Empowered by engineers with advanced skillsets and the flexibility that comes from broader capabilities — contributing far more to GM"',
     '"not limit myself or my team — open mindset and tried new things instead of staying within boundaries"'
   ]},
-  'vision-2': { head: 'Culture of genuine growth investment — 24/34 responses', quotes: [
+  'vision-2': { head: 'Culture of genuine growth investment — 24/35 responses', quotes: [
     '"I believe our long-term competitiveness comes down to how well we develop our people and broaden their capabilities"',
     '"people have more potential than we often realize and leadership is about creating conditions for that potential to grow"',
     '"I want to build a culture where people step up, look ahead, and deliver real results"',
@@ -2461,7 +2564,7 @@ const _LV_TIPS = {
     '"I personally enjoy AIO 2.0 — it prepares employees to surf in different waves and be useful for the company"',
     '"the vision of preparing and caring for our people for the future — trainings, university partnerships, ITAPs"'
   ]},
-  'vision-3': { head: 'Faster cross-boundary problem solving — 23/34 responses', quotes: [
+  'vision-3': { head: 'Faster cross-boundary problem solving — 24/35 responses', quotes: [
     '"People can solve problems across boundaries without being limited by narrow roles"',
     '"TCK can move faster, solve problems end-to-end, and compete globally without relying too much on others"',
     '"We will move from reactive to predictive problem solving and become a team that proposes integrated solutions"',
@@ -2469,7 +2572,7 @@ const _LV_TIPS = {
     '"TCK will be able to work across boundaries more naturally and deliver more outcome with the same resources"',
     '"more efficiency and flexibility at allocating complex jobs — the same workload done with optimized resources and faster"'
   ]},
-  'vision-4': { head: 'TCK as most valued center in GM — 20/34 responses', quotes: [
+  'vision-4': { head: 'TCK as most valued center in GM — 21/35 responses', quotes: [
     '"Becoming most valued engineering center in GM"',
     '"TCK can be the most respected technical center in GM"',
     '"The most valued Technical Center means the most valued People"',
@@ -2477,7 +2580,7 @@ const _LV_TIPS = {
     '"TCK will be able to be a reference of delivery excellence in our products in the lowest possible time"',
     '"Take broader leadership in global engineering and make a direct impact on the industry"'
   ]},
-  'vision-5': { head: 'Engineers reinvented physical → virtual — 17/34 responses', quotes: [
+  'vision-5': { head: 'Engineers reinvented physical → virtual — 17/35 responses', quotes: [
     '"successfully upskilled and reskilled engineers from physical to virtual engineering"',
     '"We successfully pioneered virtualization in Korea, completing product development without a physical vehicle and reducing timeline by 86 weeks"',
     '"multi-functional Engineers in their specific areas also knowing new tools (AI/Immersive/NX)"',
@@ -2485,7 +2588,7 @@ const _LV_TIPS = {
     '"We must apply cutting-edge technology ahead of others — employees need to cultivate curiosity and be willing to experiment"',
     '"I can\'t imagine how far AI will go in 10 years — an R&D company should focus on R&D"'
   ]},
-  'regret-speed': { head: 'Moved too slowly / too rule-bound — 15 of 34 Part 2 responses (44%)', quotes: [
+  'regret-speed': { head: 'Moved too slowly / too rule-bound — 14 of 35 Part 2 responses (40%)', quotes: [
     '"Just followed blindly the BP and guidelines without questioning"',
     '"I was too faithful to the rules and BP set by GM — breaking the rules was considered the greatest wrong"',
     '"My biggest regret would be relying too heavily on standards and processes, which slowed down execution"',
@@ -2493,7 +2596,7 @@ const _LV_TIPS = {
     '"I would regret having accepted limitations too easily and not encouraging teams to fail fast"',
     '"I would tell myself to wake up and realize the old way is a plan to fail"'
   ]},
-  'regret-people': { head: 'Did not develop & bring people along — 9 of 34 Part 2 responses (26%)', quotes: [
+  'regret-people': { head: 'Did not develop & bring people along — 10 of 35 Part 2 responses (29%)', quotes: [
     '"My biggest regret would be not speaking up earlier about the human side of change"',
     '"I hesitated to help set up a bold mindset in younger employees"',
     '"I regret not being able to fully engage and convince less proactive engineers"',
@@ -2501,7 +2604,7 @@ const _LV_TIPS = {
     '"People have more potential than we often realize and leadership is about creating conditions for that potential to grow"',
     '"I believe our long-term competitiveness comes down to how well we develop our people — I want to build a culture where people step up, look ahead, and deliver real results"'
   ]},
-  'regret-capability': { head: 'Did not build future technical capability — 7 of 34 Part 2 responses (21%)', quotes: [
+  'regret-capability': { head: 'Did not build future technical capability — 7 of 35 Part 2 responses (20%)', quotes: [
     '"I would regret not having enough time studying advanced technology — we are too focused on current technology"',
     '"That I did not spend enough time going deep on the capabilities of artificial intelligence"',
     '"My biggest regret would be not pushing for future-focused investment and new technology development"',
@@ -2556,7 +2659,7 @@ const _LV_TIPS = {
     '"Decisions still feel top-down"',
     '"Lack of trust"'
   ]},
-  'regret-general': { head: 'Etc. — 3 of 34 responses', quotes: [
+  'regret-general': { head: 'Etc. — 4 of 35 responses', quotes: [
     '"Adapting and leading new ones."',
     '"It is very essential to reskill or upskill for a new future, but it should not be the same for all people. AIO should include more various skills, not just NX or CAE. Very good goal but not a good method yet."'
   ]},
@@ -2853,6 +2956,175 @@ const _LV_TIPS = {
 
   function _lvModalEsc(e) { if (e.key === 'Escape') _closeLvModal(); }
 })();
+
+
+// ─── GM BENCHMARK TAB ───────────────────────────────────────────────────────
+(function() {
+  const _GB_COMPANIES = ['Toyota','Ford','Alphabet','Samsung Electronics','GE','HP Inc.','Apple','Red Bull','Amazon','Tesla'];
+  const _GB_COMPANY_SHORT = ['Toyota','Ford','Alphabet','Samsung','GE','HP Inc.','Apple','Red Bull','Amazon','Tesla'];
+  const _GB_VALUES = ['Agility','Collaboration','Customer','Diversity','Execution','Innovation','Integrity','Performance','Respect'];
+
+  // People Leaders (59 respondents)
+  const _GB_PL_PCT = [[52,7,86,95,29,21,86,59,86,97],[71,21,63,67,34,25,64,54,71,71],[74,17,68,88,32,32,74,55,74,73],[12,16,63,41,35,35,71,49,63,47],[64,22,72,95,39,30,86,60,83,93],[27,5,81,93,34,27,88,48,86,93],[52,16,39,59,35,30,59,35,41,40],[47,21,77,84,46,37,90,47,84,91],[60,33,47,65,40,37,52,39,51,46]];
+  const _GB_PL_BETTER = [[29,4,49,55,16,12,49,33,50,57],[40,12,36,38,19,14,36,30,40,41],[43,10,40,51,18,18,43,31,43,43],[7,9,36,24,20,20,41,28,36,27],[37,13,41,55,22,17,51,34,48,52],[15,3,46,53,19,15,51,27,49,53],[30,9,22,34,20,17,35,20,24,23],[27,12,44,49,26,21,53,27,49,53],[35,19,27,37,23,21,30,22,29,26]];
+  const _GB_PL_WORSE = [[27,52,8,3,39,44,8,23,8,2],[16,44,21,19,37,42,20,26,16,17],[15,48,19,7,39,38,15,25,15,16],[51,48,21,34,37,37,17,29,21,31],[21,45,16,3,34,39,8,23,10,4],[41,52,11,4,37,41,7,29,8,4],[28,48,34,24,37,40,24,37,34,35],[30,45,13,9,31,36,6,30,9,5],[23,38,30,20,34,36,28,35,28,31]];
+  const _GB_PL_AVG = [51,18,66,76,36,30,74,50,71,72];
+
+  // Non-People Leaders (31 respondents)
+  const _GB_NPL_PCT = [[45,31,90,97,45,50,87,77,90,97],[60,37,87,80,45,50,83,73,80,83],[66,39,90,87,61,61,87,67,87,83],[15,26,66,28,30,34,48,36,57,38],[69,43,86,93,50,50,93,79,86,93],[55,37,86,89,54,62,83,79,87,97],[59,48,70,79,66,64,69,70,71,62],[62,46,89,89,65,62,79,61,89,93],[55,52,54,57,48,46,54,44,50,50]];
+  const _GB_NPL_BETTER = [[14,9,27,29,13,14,26,23,27,29],[18,11,26,24,13,15,25,22,24,25],[19,11,27,26,17,17,27,18,26,25],[4,7,19,8,8,10,14,10,17,11],[20,12,25,26,14,14,26,22,25,26],[16,10,25,25,15,18,24,23,26,28],[17,14,19,22,19,18,20,19,20,18],[16,12,25,25,17,16,22,17,25,27],[16,15,15,17,14,13,15,12,14,14]];
+  const _GB_NPL_WORSE = [[17,20,3,1,16,14,4,7,3,1],[12,19,4,6,16,15,5,8,6,5],[10,17,3,4,11,11,4,9,4,5],[23,20,10,21,19,19,15,18,13,18],[9,16,4,2,14,14,2,6,4,2],[13,17,4,3,13,11,5,6,4,1],[12,15,8,6,10,10,9,8,8,11],[10,14,3,3,9,10,6,11,3,2],[13,14,13,13,15,15,13,15,14,14]];
+  const _GB_NPL_AVG = [54,40,80,78,52,53,76,65,77,77];
+
+  // All respondents (90)
+  const _GB_ALL_PCT = [[49,15,87,95,35,31,86,65,88,97],[67,27,71,71,38,34,71,60,74,75],[71,24,75,88,41,42,79,59,78,76],[13,19,64,37,33,35,63,45,61,44],[66,29,77,94,43,37,89,66,84,93],[36,16,83,92,40,39,86,59,86,94],[54,27,49,65,45,41,62,46,51,47],[52,29,81,86,52,45,86,52,86,92],[59,40,49,62,43,40,52,40,51,47]];
+  const _GB_ALL_BETTER = [[43,13,76,84,29,26,75,56,77,86],[58,23,62,62,32,29,61,52,64,66],[62,21,67,77,35,35,70,49,69,68],[11,16,55,32,28,30,55,38,53,38],[57,25,66,81,36,31,77,56,73,78],[31,13,71,78,34,33,75,50,75,81],[47,23,41,56,39,35,55,39,44,41],[43,24,69,74,43,37,75,44,74,80],[51,34,42,54,37,34,45,34,43,40]];
+  const _GB_ALL_WORSE = [[44,72,11,4,55,58,12,30,11,3],[28,63,25,25,53,57,25,34,22,22],[25,65,22,11,50,49,19,34,19,21],[74,68,31,55,56,56,32,47,34,49],[30,61,20,5,48,53,10,29,14,6],[54,69,15,7,50,52,12,35,12,5],[40,63,42,30,47,50,33,45,42,46],[40,59,16,12,40,46,12,41,12,7],[36,52,43,33,49,51,41,50,42,45]];
+  const _GB_ALL_AVG = [52,25,71,77,41,38,75,55,73,74];
+
+  // Active dataset (starts with All)
+  let _GB_PCT = _GB_ALL_PCT, _GB_BETTER = _GB_ALL_BETTER, _GB_WORSE = _GB_ALL_WORSE, _GB_AVG = _GB_ALL_AVG;
+  let _gbGroup = 'all';
+
+  function _gbSetGroup(type) {
+    _gbGroup = type;
+    if (type === 'pl') {
+      _GB_PCT = _GB_PL_PCT; _GB_BETTER = _GB_PL_BETTER; _GB_WORSE = _GB_PL_WORSE; _GB_AVG = _GB_PL_AVG;
+    } else if (type === 'npl') {
+      _GB_PCT = _GB_NPL_PCT; _GB_BETTER = _GB_NPL_BETTER; _GB_WORSE = _GB_NPL_WORSE; _GB_AVG = _GB_NPL_AVG;
+    } else {
+      _GB_PCT = _GB_ALL_PCT; _GB_BETTER = _GB_ALL_BETTER; _GB_WORSE = _GB_ALL_WORSE; _GB_AVG = _GB_ALL_AVG;
+    }
+    const n = type === 'pl' ? 59 : type === 'npl' ? 31 : 90;
+    const nEl = document.getElementById('gmbench-meta-n');
+    const n2El = document.getElementById('gmbench-meta-n2');
+    if (nEl) nEl.textContent = n;
+    if (n2El) n2El.textContent = n;
+    document.querySelectorAll('._gb-toggle-btn').forEach(b => b.classList.remove('_gb-toggle-active'));
+    const btn = document.getElementById('_gbt-' + type);
+    if (btn) btn.classList.add('_gb-toggle-active');
+    _gbRender();
+  }
+
+  function _gbColor(pct) {
+    if (pct >= 80) return {bg:'rgba(239,68,68,0.38)',text:'#fca5a5'};
+    if (pct >= 65) return {bg:'rgba(245,158,11,0.30)',text:'#fcd34d'};
+    if (pct >= 52) return {bg:'rgba(245,158,11,0.13)',text:'#d4a72c'};
+    if (pct >= 38) return {bg:'rgba(20,184,166,0.13)',text:'#5bb8ae'};
+    return {bg:'rgba(20,184,166,0.35)',text:'#2dd4bf'};
+  }
+
+  function _gbRender() {
+    _gbRenderRanking();
+    _gbRenderHeatmap();
+    _gbRenderDetail();
+  }
+
+  function _gbRenderHeatmap() {
+    const el = document.getElementById('gmbench-heatmap');
+    if (!el) return;
+    const thStyle = 'padding:7px 10px;font-size:10px;font-family:\'JetBrains Mono\',monospace;color:var(--text3);letter-spacing:0.04em;text-align:center;border-bottom:0.5px solid var(--border);white-space:nowrap;';
+    const tdValStyle = 'padding:9px 14px;font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--text2);white-space:nowrap;border-bottom:0.5px solid var(--border);font-weight:500;';
+    let html = '<table style="width:100%;border-collapse:collapse;">';
+    html += '<thead><tr>';
+    html += `<th style="${thStyle}text-align:left;">Value</th>`;
+    _GB_COMPANY_SHORT.forEach(c => { html += `<th style="${thStyle}">${c}</th>`; });
+    html += '</tr></thead><tbody>';
+    _GB_VALUES.forEach((val, vi) => {
+      html += '<tr>';
+      html += `<td style="${tdValStyle}">${val}</td>`;
+      _GB_PCT[vi].forEach((pct, ci) => {
+        const col = _gbColor(pct);
+        html += `<td title="${_GB_COMPANIES[ci]}: ${pct}% rated Better than GM" style="padding:5px 4px;text-align:center;border-bottom:0.5px solid var(--border);">
+          <div style="background:${col.bg};border-radius:4px;padding:4px 5px;min-width:34px;margin:0 auto;max-width:48px;">
+            <span style="font-size:11px;font-weight:600;font-family:'JetBrains Mono',monospace;color:${col.text};">${pct}%</span>
+          </div></td>`;
+      });
+      html += '</tr>';
+    });
+    // Avg row
+    html += '<tr style="border-top:1.5px solid var(--border2);">';
+    html += `<td style="${tdValStyle}color:var(--text);font-weight:600;">Avg (all values)</td>`;
+    _GB_AVG.forEach((avg, ci) => {
+      const col = _gbColor(avg);
+      html += `<td style="padding:5px 4px;text-align:center;">
+        <div style="background:${col.bg};border-radius:4px;padding:4px 5px;min-width:34px;margin:0 auto;max-width:48px;border:0.5px solid ${col.text}33;">
+          <span style="font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${col.text};">${avg}%</span>
+        </div></td>`;
+    });
+    html += '</tr></tbody></table>';
+    el.innerHTML = html;
+  }
+
+  function _gbRenderRanking() {
+    const el = document.getElementById('gmbench-ranking');
+    if (!el) return;
+    const sorted = _GB_COMPANIES.map((c,i) => ({c,i,avg:_GB_AVG[i]})).sort((a,b)=>b.avg-a.avg);
+    const max = sorted[0].avg;
+    el.innerHTML = sorted.map(({c,avg},rank) => {
+      const col = _gbColor(avg);
+      return `<div style="display:flex;align-items:center;gap:12px;">
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);width:16px;text-align:right;">${rank+1}</div>
+        <div style="font-size:13px;color:var(--text);width:150px;flex-shrink:0;">${c}</div>
+        <div style="flex:1;background:var(--card2);border-radius:4px;height:22px;overflow:hidden;">
+          <div style="height:100%;width:${Math.round(avg/max*100)}%;background:${col.bg};border:0.5px solid ${col.text}22;border-radius:4px;transition:width 0.4s ease;display:flex;align-items:center;padding-left:8px;">
+            <span style="font-size:11px;font-weight:600;color:${col.text};font-family:'JetBrains Mono',monospace;">${avg}%</span>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text3);width:120px;flex-shrink:0;">${avg>=65?'Outperforms GM':avg>=50?'Slight edge over GM':avg>=38?'Near GM level':'GM outperforms'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function _gbRenderDetail() {
+    const el = document.getElementById('gmbench-detail');
+    if (!el) return;
+    const sorted = _GB_COMPANIES.map((c,i) => ({c,i}));
+    el.innerHTML = _GB_VALUES.map((val,vi) => {
+      const pairs = sorted.map(({c,i}) => ({c,better:_GB_BETTER[vi][i],worse:_GB_WORSE[vi][i],pct:_GB_PCT[vi][i]}));
+      pairs.sort((a,b) => b.pct - a.pct);
+      const rows = pairs.map(({c,better,worse,pct}) => {
+        const total = better + worse;
+        const betterW = Math.round(better/total*100);
+        const worseW = 100 - betterW;
+        const col = _gbColor(pct);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:4px 0;">
+          <div style="width:130px;font-size:12px;color:var(--text2);flex-shrink:0;">${c}</div>
+          <div style="flex:1;display:flex;border-radius:4px;overflow:hidden;height:18px;">
+            <div style="width:${betterW}%;background:rgba(239,68,68,0.3);display:flex;align-items:center;justify-content:flex-end;padding-right:4px;">
+              <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#fca5a5;">${better}</span>
+            </div>
+            <div style="width:${worseW}%;background:rgba(20,184,166,0.25);display:flex;align-items:center;padding-left:4px;">
+              <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#2dd4bf;">${worse}</span>
+            </div>
+          </div>
+          <div style="width:38px;font-size:11px;font-family:'JetBrains Mono',monospace;color:${col.text};text-align:right;flex-shrink:0;">${pct}%</div>
+        </div>`;
+      }).join('');
+      return `<div style="border-bottom:0.5px solid var(--border);padding:12px 0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:500;color:var(--text);flex:1;">${val}</span>
+          <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);">avg ${Math.round(_GB_PCT[vi].reduce((a,b)=>a+b,0)/_GB_PCT[vi].length)}% Better than GM</span>
+        </div>
+        ${rows}
+      </div>`;
+    }).join('');
+  }
+
+  window._gbSetGroup = _gbSetGroup;
+
+  // Render when page becomes active
+  const _origShowPage = window.showPage;
+  window.showPage = function(id) {
+    _origShowPage(id);
+    if (id === 'gmbench') setTimeout(_gbRender, 50);
+  };
+  // Also render if page is already active on load
+  if (document.getElementById('page-gmbench')?.classList.contains('active')) {
+    setTimeout(_gbRender, 100);
+  }
+})();
+
 </script>
 
 <!-- LV Full-Data Modal -->
